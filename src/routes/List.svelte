@@ -3,13 +3,30 @@
   import state from '../stores/store'
   import { pool } from '../lib/relay'
   import NoteCard from '../components/NoteCard.svelte'
+  import {push} from 'svelte-spa-router'
 
   let note = ''
+  let search = ''
   let publishing = false
 
   onMount(() => {
     console.log('list')
   })
+
+  const keyPress = e => {
+    if (e.charCode === 13) searchUser();
+  };
+
+  const searchUser = () => {
+    // console.log(search, search.length)
+    if(search.length !== 64){
+      console.log('Not valid user pubkey!')
+      return
+    }
+    push(`#/u/${search.trim()}`)
+    search = ''
+  }
+
 
 
   const publishNote = async (ev) => {
@@ -74,8 +91,8 @@
       <p class="subtitle">Hello, what's on your mind</p>
     </div>
     <div class="control has-icons-left">
-      <input class="input" type="text" placeholder="Search..." />
-      <span class="icon is-medium is-left">
+      <input class="input" type="text" placeholder="Search..." bind:value={search}  on:keypress={keyPress} />
+      <span class="icon is-medium is-left" >
         <ion-icon name="search-outline" />
       </span>
     </div>

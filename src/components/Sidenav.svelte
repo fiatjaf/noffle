@@ -35,7 +35,7 @@
 
 <aside>
   <div class="block">
-    <h2 class="title">Crude</h2>
+    <h2 class="title has-text-light">Crude</h2>
   </div>
   <div class="block">
     <div class="media">
@@ -47,7 +47,7 @@
       <div class="media-content">
         <div class="content">
           <p>
-            <strong>John Smith</strong>
+            <strong class='has-text-light'>John Smith</strong>
             <br>
             <small>{abbr(pubKey)}</small>
           </p>
@@ -58,11 +58,16 @@
   <div class="block">
     <div class="menu">
       <ul class="menu-list">
-        <li><a href={`#/${pubKey}`}>Profile</a></li>
-        <li><a href='#/'>News</a></li>
-        <li><a>Following</a></li>
+        <li><a class='has-text-light' href={`#/u/${pubKey}`}>Profile</a></li>
+        <li><a class='has-text-light' href='#/'>News</a></li>
+        <li><a class='has-text-light' href='#/following'>
+          Following
+          {#if $state.following.length > 1}
+            <sup class="tag is-info is-light ml-2">{$state.following.length - 1}</sup>
+          {/if}
+        </a></li>
         <br>
-        <li><a href="#/">Settings</a></li>
+        <li><a class='has-text-light' href="#/">Settings</a></li>
       </ul>
     </div>
   </div>

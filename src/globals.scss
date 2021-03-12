@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 // Import a Google Font
-// @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap");
 
 // Set your brand colors
 // $purple: #659999;
@@ -11,13 +11,14 @@
 // $beige-lighter: #eff0eb;
 
 // Update Bulma's global variables
-// $family-sans-serif: "Nunito", sans-serif;
+$family-sans-serif: "Quicksand", sans-serif;
 // $grey-dark: $brown;
 // $grey-light: $beige-light;
-// $primary: $purple;
-// $link: $pink;
+$primary: #1a546d;
+// $link: #4d1b50;//#1b2c49;
 // $widescreen-enabled: false;
 // $fullhd-enabled: false;
+$menu-item-hover-background-color: #1b2c49;
 
 // Update some of Bulma's component variables
 // $body-background-color: $beige-lighter;

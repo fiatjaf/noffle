@@ -5,6 +5,7 @@
 	import { pool } from '../lib/relay'
 	import List from './List.svelte'
 	import Profile from './Profile.svelte'
+  import Following from './Following.svelte'
 	import Sidenav from '../components/Sidenav.svelte'
 
 	let sidenav
@@ -20,8 +21,9 @@
 
 	const routes = {
     '/': List,
+    '/following': Following,
+    '/u/:profile': Profile,
 
-    '/:profile': Profile,
 
     // Catch-all route last
     // '*': NotFound,
@@ -39,9 +41,8 @@
   :global(.sidenav) {
     position: fixed;
     left: -100%;
-    /* height: 100%; */
     transition: left 0.3s ease-in-out;
-    background: #659999;
+    background: #1a546d;
     z-index: 100;
     overflow-x: hidden;
   }
@@ -70,8 +71,9 @@
     }
     
     .sidenav {
-      position: relative;
-      left: auto;
+      /*position: relative;*/
+      left: 0;
+      width: 300px;
     }
     
     #main {

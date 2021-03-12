@@ -1,23 +1,35 @@
 <script>
 	import { beforeUpdate, onMount } from 'svelte'
+	import { SortedMap } from "insort";
 	import state from '../stores/store'
 	import { abbr } from '../lib/helpers'
 	import { pool } from '../lib/relay'
+	import NoteCard from '../components/NoteCard.svelte'
 
 	export let params
-	let self, following, followButton //= params.profile === state.pubKeyHex($state.key)
+
+	let self, following, followButton  //= params.profile === state.pubKeyHex($state.key)
+	let _notes = new SortedMap()
+	let notes = []
+
+	function makeArray(n) {
+		return Array.from(n.values())
+	}
 
 	onMount(() => {
-		pool.sub({
+		_notes = new SortedMap(notes.map(n => [n.id + ':' + n.created_at, n]), (a, b) => b.split(':')[1] - a.split(':')[1])
+		const s = pool.sub({
 			cb: (event) => {
-				console.log(event)
+				_notes.set(event.id + ':' + event.created_at, event)
+				notes = makeArray(_notes)
+				// console.log(_notes)
 			},
 			filter: {
 				author: params.profile
 			}
 		})
-	})
-	
+		s.unsub()
+	})	
 
 	beforeUpdate(() => {
 		self = params.profile === state.pubKeyHex($state.key)
@@ -51,7 +63,7 @@
 		</span>
 	</header>
 	{#if self}
-		<form>
+		<form class='my-5'>
 			<div class="field">
 			  <label class="label">Avatar</label>
 			  <div class="control">
@@ -76,5 +88,10 @@
 			<button class="button primary" on:click={handleFollow}>{followButton}</button>
 		</div>
 	{/if}
-	<pre>{JSON.stringify($state, null, 2)}</pre>
+	<div class="block my-5">
+		<h2 class="subtitle">Notes</h2>
+		{#each notes as note}
+			<NoteCard {note} />
+		{/each}
+	</div>
 </section>
