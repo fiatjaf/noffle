@@ -22,6 +22,7 @@
       'contaclist',
     ])
     state.initStore(data)
+    state.initApp()
     dispatch('start')
     // push('#/')
   }

@@ -95,6 +95,8 @@
     <div class='has-background-white-ter' id='main'>
       {#if $state.initialised}
         <Router {routes} />
+      {:else}
+        <p class='subtitle my-5'>Loading...</p>
       {/if}
     </div>
   </section>
