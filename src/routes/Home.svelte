@@ -2,8 +2,9 @@
 	import { onMount } from 'svelte'
 	import Router, { push } from 'svelte-spa-router'
 	import state from '../stores/store'
-	import { pool } from '../lib/relay'
+	// import { pool } from '../lib/relay'
 	import List from './List.svelte'
+  import Note from './Note.svelte'
 	import Profile from './Profile.svelte'
   import Following from './Following.svelte'
 	import Sidenav from '../components/Sidenav.svelte'
@@ -22,6 +23,7 @@
 	const routes = {
     '/': List,
     '/following': Following,
+    '/n/:note_id': Note,
     '/u/:profile': Profile,
 
 
@@ -31,6 +33,9 @@
 
 </script>
 <style>
+  :global(.pointer) {
+    cursor: pointer;
+  }
 
   :global(.base-grid) {
     display: grid;
@@ -87,7 +92,11 @@
     <div id="sidenav" class='sidenav' bind:this={sidenav}>
       <Sidenav />
     </div>
-    <div class='has-background-white-ter' id='main' on:click={toggleNav}>
-      <Router {routes} />
+    <div class='has-background-white-ter' id='main'>
+      {#if $state.initialised}
+        <Router {routes} />
+      {:else}
+        <p>Loading...</p>
+      {/if}
     </div>
   </section>

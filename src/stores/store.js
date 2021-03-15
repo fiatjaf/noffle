@@ -22,7 +22,8 @@ const initialState = {
   browsing: new LRU({ maxSize: 500 }),
   publishStatus: {},
   petnames: {},
-  ignoredRelays: {}
+  ignoredRelays: {},
+  initialised: false
 };
 
 const { subscribe, set, update } = writable(initialState);
@@ -56,6 +57,10 @@ export default {
       return state
     })
   },
+  initApp: () => update(state => {
+    state.initialised = true
+    return state
+  }),
   pubKeyHex: (key) => getPublicKey(key),
   receivedTextNote: (evt, mine = false) => {
     if(mine){

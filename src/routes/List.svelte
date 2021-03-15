@@ -70,13 +70,18 @@
     background: none;
   }
 
-.textarea {
-  min-height: 6em;
+:global(.textarea) {
+  min-height: 4em;
   outline: none;
   resize: none;
   overflow: auto;
   border: none;
   padding: 2rem;
+  box-shadow: none;
+}
+
+:global(.textarea:focus) {
+  border: none;
 }
 
 .textarea:focus{

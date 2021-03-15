@@ -16,10 +16,28 @@
 		return Array.from(n.values())
 	}
 
+	// async function getNotes() {
+	// 	_notes = new SortedMap(notes.map(n => [n.id + ':' + n.created_at, n]), (a, b) => b.split(':')[1] - a.split(':')[1])
+	// 	const s = pool.sub({
+	// 		cb: (event) => {
+	// 			_notes.set(event.id + ':' + event.created_at, event)
+	// 			notes = makeArray(_notes)
+	// 			// console.log(_notes)
+	// 		},
+	// 		filter: {
+	// 			author: params.profile
+	// 		}
+	// 	})
+	// 	s.unsub()
+	// }
+
+	// $: $state.initialised, getNotes()
+
 	onMount(() => {
 		_notes = new SortedMap(notes.map(n => [n.id + ':' + n.created_at, n]), (a, b) => b.split(':')[1] - a.split(':')[1])
 		const s = pool.sub({
 			cb: (event) => {
+				// if(event.type === 'error') return
 				_notes.set(event.id + ':' + event.created_at, event)
 				notes = makeArray(_notes)
 				// console.log(_notes)

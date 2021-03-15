@@ -24,8 +24,12 @@
     await state.initStore(data)
     await setRelays()
     await subscribeRelays()
+    await state.initApp()
     pool.sub({
       cb: (event, relay) => {
+        if(event.type === 'error'){
+          console.error(event)
+        }
         if (!validSig(event)) {
           console.log('received event with invalid signature', event)
           return
@@ -49,6 +53,6 @@
   {#if isuser}
     <Home />
   {:else}
-    <Optin on:start={() => (isuser = $state.key)} />
+      <Optin on:start={() => (isuser = $state.key)} />
   {/if}
 </main>
