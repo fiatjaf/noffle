@@ -57,9 +57,6 @@
 </script>
 
 <style>
-  section{
-    display: grid;
-  }
   header {
     display: grid;
     grid-template-columns: 1fr 0.75fr;
@@ -69,7 +66,9 @@
     background-color: none;
     background: none;
   }
-
+.post {
+  display: grid;
+}
 :global(.textarea) {
   min-height: 4em;
   outline: none;
