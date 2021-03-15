@@ -93,7 +93,7 @@
             <small>{humanDate(note.created_at)}</small>
             <br />
             {#if isReply}
-              <a href={`#/note/${originalNote}`}>
+              <a href={`#/n/${originalNote}`}>
                 <small>In reply to {abbr(originalNote)}</small>
               </a>
             {/if}
