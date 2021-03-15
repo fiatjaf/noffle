@@ -52,7 +52,7 @@ export default {
       },
     }),
     postcss({
-      extract: true,
+      extract: 'global.css',
       modules: false,
       use: ["sass"],
     }),
