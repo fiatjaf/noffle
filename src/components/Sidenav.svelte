@@ -26,10 +26,16 @@
     background: #555;
   }
   aside {
+    position: relative;
     padding: 1rem;
     height: 100vh;
     overflow-y: scroll;
     color: #fff;
+  }
+  @media screen and (min-width: 768px) {
+    aside {
+      position: fixed;
+    }
   }
 </style>
 
