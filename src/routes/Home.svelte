@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte'
+  import { fly } from 'svelte/transition';
 	import Router, { push } from 'svelte-spa-router'
 	import state from '../stores/store'
 	// import { pool } from '../lib/relay'
@@ -50,10 +51,12 @@
     background: #1a546d;
     z-index: 100;
     overflow-x: hidden;
+    width: 300px;
   }
 
   #main {
     grid-area: main;
+    width: 100%;
     min-height: 100vh;
     overflow-x: hidden;
   }
@@ -63,10 +66,20 @@
     /* grid-template-columns: minmax(auto, 0.3fr) 1fr; */
   }
 
+  .float {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    color: #fff;
+  }
+
 
   @media screen and (min-width: 768px) {
     .base-grid {
-      display: grid;
       grid-template-columns: minmax(min-content, 300px) 1fr;
       grid-template-areas: 'sidenav main';
     }
@@ -76,13 +89,16 @@
     }
     
     .sidenav {
-      /*position: relative;*/
+      position: relative;
       left: 0;
-      width: 300px;
     }
     
     #main {
-      padding: 0 2rem;  
+      padding: 0 2rem;
+    }
+
+    .float {
+      display: none;
     }
   }
 
@@ -95,6 +111,10 @@
     <div class='has-background-white-ter' id='main'>
       {#if $state.initialised}
         <Router {routes} />
+        <span class="icon is-large has-background-primary is-clickable float" on:click={toggleNav} in:fly="{{ y: 200, duration: 500 }}" >
+            <ion-icon name="menu-sharp"></ion-icon>           
+          
+        </span>
       {:else}
         <p class='subtitle my-5'>Loading...</p>
       {/if}

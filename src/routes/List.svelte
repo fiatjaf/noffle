@@ -90,7 +90,7 @@
 
 </style>
 
-<section class="px-4">
+<div class='px-4'>
   <header class="header my-2">
     <div class="greet">
       <p class="subtitle">Hello, what's on your mind</p>
@@ -115,4 +115,4 @@
       <NoteCard {note} />
     {/each}    
   </div>  
-</section>
+</div>

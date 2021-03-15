@@ -56,6 +56,10 @@
     cursor: pointer;
   }
 
+  .card-content {
+    word-break: break-all;
+  }
+
   :global(.card-footer > .field) {
     width: 100%;
     align-items: flex-end;
