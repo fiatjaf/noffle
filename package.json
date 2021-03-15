@@ -4,7 +4,8 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public"
+    "start": "sirv public",
+    "pretty": "prettier --write \"./**/*.{js,jsx,json}\""
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",

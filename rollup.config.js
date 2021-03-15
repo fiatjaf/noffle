@@ -26,13 +26,13 @@ function serve() {
         ["run", "start", "--", "--dev"],
         {
           stdio: ["ignore", "inherit", "inherit"],
-          shell: true
+          shell: true,
         }
       );
 
       process.on("SIGTERM", toExit);
       process.on("exit", toExit);
-    }
+    },
   };
 }
 
@@ -42,23 +42,23 @@ export default {
     sourcemap: true,
     format: "iife",
     name: "app",
-    file: "public/build/bundle.js"
+    file: "public/build/bundle.js",
   },
   plugins: [
     svelte({
       compilerOptions: {
         // enable run-time checks when not in production
-        dev: !production
-      }
+        dev: !production,
+      },
     }),
     postcss({
       extract: true,
       modules: false,
-      use: ["sass"]
+      use: ["sass"],
     }),
     json({
       // exclude: '**/bip39/src/wordlists/!(english).json',
-      indent: ""
+      indent: "",
     }),
     commonjs(),
     nodePolyfills(),
@@ -70,10 +70,10 @@ export default {
     resolve({
       browser: true,
       preferBuiltins: false,
-      dedupe: ["svelte"]
+      dedupe: ["svelte"],
     }),
     inject({
-      Buffer: ["buffer", "Buffer"]
+      Buffer: ["buffer", "Buffer"],
     }),
     // we'll extract any component CSS out into
     // a separate file - better for performance
@@ -89,9 +89,9 @@ export default {
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
-    production && terser()
+    production && terser(),
   ],
   watch: {
-    clearScreen: false
-  }
+    clearScreen: false,
+  },
 };

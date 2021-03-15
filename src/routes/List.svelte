@@ -114,7 +114,5 @@
     {#each Array.from($state.home.values()) as note}
       <NoteCard {note} />
     {/each}    
-  </div>
-  
-  <pre>{JSON.stringify($state, null, 2)}</pre>
+  </div>  
 </section>
