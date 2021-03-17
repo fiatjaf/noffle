@@ -4,6 +4,12 @@
 
 	let pubKey = state.pubKeyHex($state.key)
 
+    function getMeta(key) {
+        let meta = $state.metadata.get(key)
+        console.log('get')
+        return meta
+    }
+
 </script>
 
 <section class='px-4'>
@@ -16,7 +22,7 @@
 				<div class="media">
             <figure class="media-left">
                 <p class="image is-64x64">
-                    <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png"/>
+                    <img class="is-rounded" src={getMeta(follow)?.picture ?? "https://bulma.io/images/placeholders/128x128.png"}/>
                 </p>
             </figure>
             <div class="media-content">

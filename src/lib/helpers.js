@@ -7,3 +7,9 @@ export const humanDate = (d) => {
 export const abbr = (pubkey) => {
   return `${pubkey.slice(0, 4)}…${pubkey.slice(-4)}`;
 };
+
+export const sanitizeString = (str) => {
+	return str.replace(/[^\w. ]/gi, function (c) {
+		return '&#' + c.charCodeAt(0) + ';';
+	});
+};

@@ -8,6 +8,7 @@
   import Note from './Note.svelte'
 	import Profile from './Profile.svelte'
   import Following from './Following.svelte'
+  import Settings from './Settings.svelte'
 	import Sidenav from '../components/Sidenav.svelte'
 
 	let sidenav
@@ -26,6 +27,7 @@
     '/following': Following,
     '/n/:note_id': Note,
     '/u/:profile': Profile,
+    '/settings': Settings,
 
 
     // Catch-all route last

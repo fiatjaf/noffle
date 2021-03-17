@@ -10,6 +10,9 @@
   let replyMsg = ''
   let isReply = note.tags.length
   let originalNote
+  let meta = {}
+
+  $: meta = $state.metadata.get(note.pubkey)
 
   if (isReply) {
     originalNote = note.tags[0][1]
@@ -84,7 +87,7 @@
           <img
             on:click={() => push(`#/u/${note.pubkey}`)}
             class="is-rounded"
-            src="https://bulma.io/images/placeholders/128x128.png" />
+            src={meta?.picture ?? "https://bulma.io/images/placeholders/128x128.png"} />
         </p>
       </figure>
       <div class="media-content">

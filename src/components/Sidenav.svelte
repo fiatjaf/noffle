@@ -3,6 +3,9 @@
   import { abbr } from "../lib/helpers"
 
   let pubKey = state.pubKeyHex($state.key)
+  
+  $: meta = $state.metadata.get(pubKey)
+
 </script>
 
 <style>
@@ -47,13 +50,13 @@
     <div class="media">
       <figure class="media-left">
         <p class="image is-64x64">
-          <img class='is-rounded' src="https://bulma.io/images/placeholders/128x128.png" />
+          <img class='is-rounded' src={meta?.picture ?? "https://bulma.io/images/placeholders/128x128.png"} />
         </p>
       </figure>
       <div class="media-content">
         <div class="content">
           <p>
-            <strong class='has-text-light'>John Smith</strong>
+            <strong class='has-text-light'>{meta?.name ?? 'Anon'}</strong>
             <br>
             <small>{abbr(pubKey)}</small>
           </p>
@@ -73,7 +76,7 @@
           {/if}
         </a></li>
         <br>
-        <li><a class='has-text-light' href="#/">Settings</a></li>
+        <li><a class='has-text-light' href="#/settings">Settings</a></li>
       </ul>
     </div>
   </div>

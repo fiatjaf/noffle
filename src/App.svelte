@@ -25,6 +25,7 @@
     await setRelays()
     await subscribeRelays()
     await state.initApp()
+    pool.setPrivateKey($state.key);
     pool.sub({
       cb: (event, relay) => {
         if(event.type === 'error'){
@@ -38,7 +39,11 @@
           case KIND_TEXTNOTE:
             let mynote = event.pubkey === state.pubKeyHex(isuser)
             state.receivedTextNote(event, mynote)
-            break
+            break;
+          case KIND_METADATA:
+            let meta = JSON.parse(event.content)
+            state.receivedMetadata(event.pubkey, meta)
+            break;
         }
       },
       filter: {
