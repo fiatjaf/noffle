@@ -1,12 +1,59 @@
 <script>
-  import state from "../stores/store"
-  import { abbr } from "../lib/helpers"
+  import state from '../stores/store'
+  import {abbr} from '../lib/helpers'
 
   let pubKey = state.pubKeyHex($state.key)
-  
-  $: meta = $state.metadata.get(pubKey)
 
+  $: meta = $state.metadata.get(pubKey)
 </script>
+
+<aside>
+  <div class="block">
+    <h2 class="title has-text-light">Crude</h2>
+  </div>
+  <div class="block">
+    <div class="media">
+      <figure class="media-left">
+        <p class="image is-64x64">
+          <img
+            class="is-rounded"
+            src={meta?.picture ??
+              'https://bulma.io/images/placeholders/128x128.png'}
+          />
+        </p>
+      </figure>
+      <div class="media-content">
+        <div class="content">
+          <p>
+            <strong class="has-text-light">{meta?.name ?? 'Anon'}</strong>
+            <br />
+            <small>{abbr(pubKey)}</small>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="block">
+    <div class="menu">
+      <ul class="menu-list">
+        <li><a class="has-text-light" href={`#/u/${pubKey}`}>Profile</a></li>
+        <li><a class="has-text-light" href="#/">News</a></li>
+        <li>
+          <a class="has-text-light" href="#/following">
+            Following
+            {#if $state.following.length > 1}
+              <sup class="tag is-info is-light ml-2"
+                >{$state.following.length - 1}</sup
+              >
+            {/if}
+          </a>
+        </li>
+        <br />
+        <li><a class="has-text-light" href="#/settings">Settings</a></li>
+      </ul>
+    </div>
+  </div>
+</aside>
 
 <style>
   /* width */
@@ -41,43 +88,3 @@
     }
   }
 </style>
-
-<aside>
-  <div class="block">
-    <h2 class="title has-text-light">Crude</h2>
-  </div>
-  <div class="block">
-    <div class="media">
-      <figure class="media-left">
-        <p class="image is-64x64">
-          <img class='is-rounded' src={meta?.picture ?? "https://bulma.io/images/placeholders/128x128.png"} />
-        </p>
-      </figure>
-      <div class="media-content">
-        <div class="content">
-          <p>
-            <strong class='has-text-light'>{meta?.name ?? 'Anon'}</strong>
-            <br>
-            <small>{abbr(pubKey)}</small>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="block">
-    <div class="menu">
-      <ul class="menu-list">
-        <li><a class='has-text-light' href={`#/u/${pubKey}`}>Profile</a></li>
-        <li><a class='has-text-light' href='#/'>News</a></li>
-        <li><a class='has-text-light' href='#/following'>
-          Following
-          {#if $state.following.length > 1}
-            <sup class="tag is-info is-light ml-2">{$state.following.length - 1}</sup>
-          {/if}
-        </a></li>
-        <br>
-        <li><a class='has-text-light' href="#/settings">Settings</a></li>
-      </ul>
-    </div>
-  </div>
-</aside>

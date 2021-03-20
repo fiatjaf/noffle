@@ -1,40 +1,58 @@
 <script>
-	import { onMount } from 'svelte'
-  import { fly } from 'svelte/transition';
-	import Router, { push } from 'svelte-spa-router'
-	import state from '../stores/store'
-	// import { pool } from '../lib/relay'
-	import List from './List.svelte'
+  import {onMount} from 'svelte'
+  import {fly} from 'svelte/transition'
+  import Router, {push} from 'svelte-spa-router'
+  import state from '../stores/store'
+  // import { pool } from '../lib/relay'
+  import List from './List.svelte'
   import Note from './Note.svelte'
-	import Profile from './Profile.svelte'
+  import Profile from './Profile.svelte'
   import Following from './Following.svelte'
   import Settings from './Settings.svelte'
-	import Sidenav from '../components/Sidenav.svelte'
+  import Sidenav from '../components/Sidenav.svelte'
 
-	let sidenav
+  let sidenav
 
   onMount(() => {
     console.log('home')
-    
   })
 
-	const toggleNav = () => {
+  const toggleNav = () => {
     sidenav.classList.toggle('open')
   }
 
-	const routes = {
+  const routes = {
     '/': List,
     '/following': Following,
     '/n/:note_id': Note,
     '/u/:profile': Profile,
-    '/settings': Settings,
-
+    '/settings': Settings
 
     // Catch-all route last
     // '*': NotFound,
   }
-
 </script>
+
+<section class="base-grid">
+  <div id="sidenav" class="sidenav" bind:this={sidenav}>
+    <Sidenav />
+  </div>
+  <div class="has-background-white-ter" id="main">
+    {#if $state.initialised}
+      <Router {routes} />
+      <span
+        class="icon is-large has-background-primary is-clickable float"
+        on:click={toggleNav}
+        in:fly={{y: 200, duration: 500}}
+      >
+        <ion-icon name="menu-sharp" />
+      </span>
+    {:else}
+      <p class="subtitle my-5">Loading...</p>
+    {/if}
+  </div>
+</section>
+
 <style>
   :global(.pointer) {
     cursor: pointer;
@@ -79,22 +97,21 @@
     color: #fff;
   }
 
-
   @media screen and (min-width: 768px) {
     .base-grid {
       grid-template-columns: minmax(min-content, 300px) 1fr;
       grid-template-areas: 'sidenav main';
     }
-    
+
     #sidenav {
       grid-area: sidenav;
     }
-    
+
     .sidenav {
       position: relative;
       left: 0;
     }
-    
+
     #main {
       padding: 0 2rem;
     }
@@ -103,22 +120,4 @@
       display: none;
     }
   }
-
 </style>
-
-<section class="base-grid">
-    <div id="sidenav" class='sidenav' bind:this={sidenav}>
-      <Sidenav />
-    </div>
-    <div class='has-background-white-ter' id='main'>
-      {#if $state.initialised}
-        <Router {routes} />
-        <span class="icon is-large has-background-primary is-clickable float" on:click={toggleNav} in:fly="{{ y: 200, duration: 500 }}" >
-            <ion-icon name="menu-sharp"></ion-icon>           
-          
-        </span>
-      {:else}
-        <p class='subtitle my-5'>Loading...</p>
-      {/if}
-    </div>
-  </section>

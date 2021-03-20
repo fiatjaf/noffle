@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 // Import a Google Font
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
 
 // Set your brand colors
 // $purple: #659999;
@@ -11,7 +11,7 @@
 // $beige-lighter: #eff0eb;
 
 // Update Bulma's global variables
-$family-sans-serif: "Quicksand", sans-serif;
+$family-sans-serif: 'Quicksand', sans-serif;
 // $grey-dark: $brown;
 // $grey-light: $beige-light;
 $primary: #1a546d;
@@ -27,7 +27,7 @@ $menu-item-hover-background-color: #1b2c49;
 // $input-shadow: none;
 
 // Import only what you need from Bulma
-@import "../node_modules/bulma/bulma.sass";
+@import '../node_modules/bulma/bulma.sass';
 // @import "../node_modules/bulma/sass/utilities/_all.sass";
 // @import "../node_modules/bulma/sass/base/_all.sass";
 // @import "../node_modules/bulma/sass/elements/button.sass";

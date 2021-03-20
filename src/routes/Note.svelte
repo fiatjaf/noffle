@@ -1,9 +1,9 @@
 <script>
-  import { onMount } from 'svelte'
-  import { SortedMap } from 'insort'
-  import { push } from 'svelte-spa-router'
-  import { pool } from '../lib/relay'
-  import { abbr, humanDate } from '../lib/helpers'
+  import {onMount} from 'svelte'
+  import {SortedMap} from 'insort'
+  import {push} from 'svelte-spa-router'
+  import {pool} from '../lib/relay'
+  import {abbr, humanDate} from '../lib/helpers'
   import NoteCard from '../components/NoteCard.svelte'
 
   export let params
@@ -11,7 +11,7 @@
   let s, note, comments
   let replyMsg = ''
 
-  const sendReply = (id) => {
+  const sendReply = id => {
     return
   }
 
@@ -19,7 +19,10 @@
 
   function getNote() {
     comments = []
-    let _comments = new SortedMap(comments.map(n => [n.id + ':' + n.created_at, n]), (a, b) => b.split(':')[1] - a.split(':')[1])
+    let _comments = new SortedMap(
+      comments.map(n => [n.id + ':' + n.created_at, n]),
+      (a, b) => b.split(':')[1] - a.split(':')[1]
+    )
     s = pool.sub({
       cb: (event, relay) => {
         if (event.id === params.note_id) {
@@ -30,7 +33,7 @@
           // console.log(event)
         }
       },
-      filter: [{ id: params.note_id }, { '#e': params.note_id }],
+      filter: [{id: params.note_id}, {'#e': params.note_id}]
     })
     s.unsub()
   }
@@ -39,12 +42,6 @@
     getNote()
   })
 </script>
-
-<style>
-  .card-footer {
-    border: none;
-  }
-</style>
 
 <section>
   {#if note}
@@ -56,7 +53,8 @@
               <img
                 on:click={() => push(`#/u/${note.pubkey}`)}
                 class="is-rounded"
-                src="https://bulma.io/images/placeholders/128x128.png" />
+                src="https://bulma.io/images/placeholders/128x128.png"
+              />
             </p>
           </figure>
           <div class="media-content">
@@ -64,7 +62,8 @@
               <p>
                 <strong
                   class="pointer"
-                  on:click={() => push(`#/u/${note.pubkey}`)}>
+                  on:click={() => push(`#/u/${note.pubkey}`)}
+                >
                   {abbr(note.pubkey)}
                 </strong>
                 <br />
@@ -79,21 +78,32 @@
         {note.content}
         <div class="post my-5">
           <div class="block">
-            <textarea class='textarea' placeholder='Send a comment...' bind:value={replyMsg}></textarea>
+            <textarea
+              class="textarea"
+              placeholder="Send a comment..."
+              bind:value={replyMsg}
+            />
           </div>
         </div>
       </div>
       <div class="card-footer is-justify-content-flex-end">
-          <button class='button is-primary is-rounded' on:click={sendReply} >Send</button>
+        <button class="button is-primary is-rounded" on:click={sendReply}
+          >Send</button
+        >
       </div>
     </article>
   {/if}
   {#if comments.length}
-    <div class='block'>
+    <div class="block">
       {#each comments as comment}
         <NoteCard note={comment} />
       {/each}
     </div>
   {/if}
-  
 </section>
+
+<style>
+  .card-footer {
+    border: none;
+  }
+</style>

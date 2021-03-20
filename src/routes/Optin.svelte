@@ -1,13 +1,13 @@
 <script>
-  import { createEventDispatcher } from 'svelte'
-  import { pool, setRelays, getNewKey, subscribeRelays } from '../lib/relay'
-  import { idbGetMany, initDB } from '../lib/db'
+  import {createEventDispatcher} from 'svelte'
+  import {pool, setRelays, getNewKey, subscribeRelays} from '../lib/relay'
+  import {idbGetMany, initDB} from '../lib/db'
   import state from '../stores/store'
   // import Sidenav from '../components/Sidenav.svelte'
   // import List from '../components/List.svelte'
   // import Profile from '../routes/Profile.svelte'
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
   async function initialize() {
     await initDB()
@@ -19,7 +19,7 @@
       'following',
       'mynotes',
       'events',
-      'contaclist',
+      'contaclist'
     ])
     state.initStore(data)
     state.initApp()
@@ -27,35 +27,6 @@
     // push('#/')
   }
 </script>
-
-<style>
-  .is-fullheight {
-    background: #659999;
-    background: linear-gradient(45deg, #f4791f, #659999);
-    background-size: cover;
-  }
-
-	.title,
-	.subtitle {
-	color: #fff;
-	}
-
-  .subtitle {
-    padding: 3rem 0;
-    line-height: 1.5;
-  }
-  .buttons {
-    justify-content: center;
-  }
-
-  .buttons > .button {
-    margin-right: 1rem;
-  }
-  .is-outlined {
-    background: none;
-    color: #fff;
-  }
-</style>
 
 <section class="hero is-fullheight">
   <div class="hero-body">
@@ -81,3 +52,32 @@
     </div>
   </div>
 </section>
+
+<style>
+  .is-fullheight {
+    background: #659999;
+    background: linear-gradient(45deg, #f4791f, #659999);
+    background-size: cover;
+  }
+
+  .title,
+  .subtitle {
+    color: #fff;
+  }
+
+  .subtitle {
+    padding: 3rem 0;
+    line-height: 1.5;
+  }
+  .buttons {
+    justify-content: center;
+  }
+
+  .buttons > .button {
+    margin-right: 1rem;
+  }
+  .is-outlined {
+    background: none;
+    color: #fff;
+  }
+</style>

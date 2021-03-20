@@ -1,7 +1,7 @@
 <script>
-  import { onMount } from 'svelte'
+  import {onMount} from 'svelte'
   import state from '../stores/store'
-  import { pool } from '../lib/relay'
+  import {pool} from '../lib/relay'
 
   let note = ''
   let publishing = false
@@ -10,7 +10,7 @@
     console.log('list')
   })
 
-  const publishNote = async (ev) => {
+  const publishNote = async ev => {
     ev.preventDefault()
     publishing = true
     const msg = {
@@ -20,7 +20,7 @@
       kind: 1,
       content: note.trim()
     }
-    try{
+    try {
       await pool.publish(msg, (status, url) => {
         if (status === 0) {
           console.log(`publish request sent to ${url}`)
@@ -29,35 +29,13 @@
           console.log(`event published by ${url}`)
         }
       })
-    } catch(e) {
+    } catch (e) {
       console.error('Something went wrong:', e)
     }
     note = ''
     publishing = false
-  } 
+  }
 </script>
-
-<style>
-  header {
-    display: grid;
-    grid-template-columns: 1fr 0.75fr;
-    align-items: flex-end;
-  }
-  .navbar, .navbar-menu {
-    background-color: none;
-    background: none;
-  }
-
-.textarea {
-  min-height: 6em;
-  outline: none;
-  resize: none;
-  overflow: auto;
-  border: none;
-  padding: 2rem;
-}
-
-</style>
 
 <section class="px-4">
   <header class="header my-2">
@@ -73,10 +51,17 @@
   </header>
   <div class="post mt-5">
     <div class="block">
-      <textarea class='textarea' placeholder='Add a note...' bind:value={note}></textarea>
+      <textarea
+        class="textarea"
+        placeholder="Add a note..."
+        bind:value={note}
+      />
     </div>
     <div class="block">
-      <button class='button is-primary is-rounded is-pulled-right button' on:click={publishNote} >Send</button>
+      <button
+        class="button is-primary is-rounded is-pulled-right button"
+        on:click={publishNote}>Send</button
+      >
     </div>
   </div>
   {#each $state.home as note}
@@ -84,3 +69,25 @@
   {/each}
   <pre>{JSON.stringify($state, null, 2)}</pre>
 </section>
+
+<style>
+  header {
+    display: grid;
+    grid-template-columns: 1fr 0.75fr;
+    align-items: flex-end;
+  }
+  .navbar,
+  .navbar-menu {
+    background-color: none;
+    background: none;
+  }
+
+  .textarea {
+    min-height: 6em;
+    outline: none;
+    resize: none;
+    overflow: auto;
+    border: none;
+    padding: 2rem;
+  }
+</style>
