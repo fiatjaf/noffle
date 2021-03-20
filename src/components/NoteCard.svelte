@@ -1,5 +1,6 @@
 <script>
   import { pool } from '../lib/relay'
+  import { fly } from 'svelte/transition'
   import state from '../stores/store'
   import { humanDate, abbr } from '../lib/helpers'
   import { push } from 'svelte-spa-router'
@@ -79,7 +80,7 @@
   }
 </style>
 
-<article class="card p-5">
+<article class="card p-5" in:fly={{ y: 200, duration: 300 }}>
   <header class="card-header is-shadowless">
     <div class="media">
       <figure class="media-left is-clickable">
