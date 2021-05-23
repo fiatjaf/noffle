@@ -1,13 +1,11 @@
 <script>
-  import state from '../stores/store'
-  import {abbr} from '../lib/helpers'
-
-  let pubKey = state.pubKeyHex($state.key)
+  import state from '../stores/state'
+  import following from '../stores/following'
 
   function getMeta(key) {
-    let meta = $state.metadata.get(key)
-    console.log('get')
-    return meta
+    // let meta = $state.metadata.get(key)
+    // console.log('get')
+    // return meta
   }
 </script>
 
@@ -16,12 +14,13 @@
     <h1 class="title">Following</h1>
   </header>
   <div class="following">
-    {#each $state.following.filter(f => f !== pubKey) as follow}
+    {#each $following.filter(f => f !== $state.pubkey) as follow}
       <div class="block">
         <div class="media">
           <figure class="media-left">
             <p class="image is-64x64">
               <img
+                alt=""
                 class="is-rounded"
                 src={getMeta(follow)?.picture ??
                   'https://bulma.io/images/placeholders/128x128.png'}

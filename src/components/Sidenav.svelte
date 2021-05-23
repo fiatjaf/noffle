@@ -1,23 +1,22 @@
 <script>
-  import state from '../stores/store'
+  import metadata from '../stores/metadata'
+ import following from '../stores/following'
+  import state from '../stores/state'
   import {abbr} from '../lib/helpers'
-
-  let pubKey = state.pubKeyHex($state.key)
-
-  $: meta = $state.metadata.get(pubKey)
 </script>
 
 <aside>
   <div class="block">
-    <h2 class="title has-text-light">Crude</h2>
+    <h2 class="title has-text-light">Nostrept</h2>
   </div>
   <div class="block">
     <div class="media">
       <figure class="media-left">
         <p class="image is-64x64">
           <img
+            alt="~"
             class="is-rounded"
-            src={meta?.picture ??
+            src={$metadata.picture ||
               'https://bulma.io/images/placeholders/128x128.png'}
           />
         </p>
@@ -25,9 +24,9 @@
       <div class="media-content">
         <div class="content">
           <p>
-            <strong class="has-text-light">{meta?.name ?? 'Anon'}</strong>
+            <strong class="has-text-light">{metadata.name || 'Anon'}</strong>
             <br />
-            <small>{abbr(pubKey)}</small>
+            <small>{abbr($state.pubkey)}</small>
           </p>
         </div>
       </div>
@@ -36,14 +35,16 @@
   <div class="block">
     <div class="menu">
       <ul class="menu-list">
-        <li><a class="has-text-light" href={`#/u/${pubKey}`}>Profile</a></li>
+        <li>
+          <a class="has-text-light" href={`#/u/${$state.pubkey}`}>Profile</a>
+        </li>
         <li><a class="has-text-light" href="#/">News</a></li>
         <li>
           <a class="has-text-light" href="#/following">
             Following
-            {#if $state.following.length > 1}
+            {#if $following.length > 1}
               <sup class="tag is-info is-light ml-2"
-                >{$state.following.length - 1}</sup
+                >{$following.length - 1}</sup
               >
             {/if}
           </a>
@@ -79,7 +80,7 @@
     position: relative;
     padding: 1rem;
     height: 100vh;
-    overflow-y: scroll;
+    overflow: hidden;
     color: #fff;
   }
   @media screen and (min-width: 768px) {

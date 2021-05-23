@@ -11,7 +11,7 @@
   let s, note, comments
   let replyMsg = ''
 
-  const sendReply = id => {
+  const sendReply = () => {
     return
   }
 
@@ -24,7 +24,7 @@
       (a, b) => b.split(':')[1] - a.split(':')[1]
     )
     s = pool.sub({
-      cb: (event, relay) => {
+      cb: (event, _relay) => {
         if (event.id === params.note_id) {
           note = event
         } else {
@@ -51,6 +51,7 @@
           <figure class="media-left pointer">
             <p class="image is-32x32">
               <img
+                alt=""
                 on:click={() => push(`#/u/${note.pubkey}`)}
                 class="is-rounded"
                 src="https://bulma.io/images/placeholders/128x128.png"

@@ -1,15 +1,6 @@
 <script>
-  import state from '../stores/store'
-  import {idbGet} from '../lib/db'
-
-  async function accountJSON() {
-    const relays = await idbGet('relays')
-    return {
-      key: $state.key,
-      following: $state.following,
-      relays
-    }
-  }
+  import state from '../stores/state'
+  import {relays} from '../lib/relay'
 </script>
 
 <div class="px-4">
@@ -18,28 +9,32 @@
   </header>
   <main class="block">
     <div class="field my-6">
-      <label class="label">Import a private key</label>
       <div class="control">
-        <input class="input" type="text" placeholder="Private key" />
+        <label>
+          Import a private key
+          <input class="input" type="text" placeholder="Private key" />
+        </label>
       </div>
       <p class="help">This will reset your Nostr account</p>
     </div>
     <div class="field my-6">
-      <label class="label">Import/Export account</label>
       <div class="columns">
-        <div class="column">
-          <div class="file is-normal">
-            <label class="file-label">
-              <input class="file-input" type="file" name="resume" />
-              <span class="file-cta">
-                <span class="file-icon">
-                  <ion-icon name="cloud-upload-sharp" />
+        <div>
+          Import/Export account
+          <div class="column">
+            <div class="file is-normal">
+              <label class="file-label">
+                <input class="file-input" type="file" name="resume" />
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <ion-icon name="cloud-upload-sharp" />
+                  </span>
+                  <span class="file-label">Upload</span>
                 </span>
-                <span class="file-label">Upload</span>
-              </span>
-            </label>
+              </label>
+            </div>
+            <p class="help">Upload JSON backup</p>
           </div>
-          <p class="help">Upload JSON backup</p>
         </div>
         <div class="column">
           <button class="button">
@@ -54,34 +49,35 @@
     </div>
     <div class="content my-6">
       <label for="" class="label">Relays</label>
-      {#await idbGet('relays') then relays}
-        {#each relays as relay}
-          <div class="columns">
-            <div class="column relay-host">
-              <p>{relay.host}</p>
-            </div>
-            <!-- <div class="column is-1" /> -->
-            <div class="column">
-              <div class="field is-grouped right">
-                <p class="control">
-                  <button class="button is-small is-primary">Edit</button>
-                </p>
-                <p class="control">
-                  <button class="button is-small is-light">Ignore</button>
-                </p>
-                <p class="control">
-                  <button class="button is-small is-light">Recommend</button>
-                </p>
-              </div>
+      {#each relays as relay}
+        <div class="columns">
+          <div class="column relay-host">
+            <p>{relay.host}</p>
+          </div>
+          <!-- <div class="column is-1" /> -->
+          <div class="column">
+            <div class="field is-grouped right">
+              <p class="control">
+                <button class="button is-small is-primary">Edit</button>
+              </p>
+              <p class="control">
+                <button class="button is-small is-light">Ignore</button>
+              </p>
+              <p class="control">
+                <button class="button is-small is-light">Recommend</button>
+              </p>
             </div>
           </div>
-        {/each}
-      {/await}
+        </div>
+      {/each}
     </div>
   </main>
-  {#await accountJSON() then json}
-    <pre class="help">{JSON.stringify(json, null, 2)}</pre>
-  {/await}
+  <pre
+    class="help">{JSON.stringify( {
+      key: $state.key,
+      following: $state.following,
+      relays
+} , null, 2)}</pre>
 </div>
 
 <style>

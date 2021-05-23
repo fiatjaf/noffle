@@ -1,9 +1,8 @@
 <script>
   import {onMount} from 'svelte'
   import {fly} from 'svelte/transition'
-  import Router, {push} from 'svelte-spa-router'
-  import state from '../stores/store'
-  // import { pool } from '../lib/relay'
+  import Router from 'svelte-spa-router'
+
   import List from './List.svelte'
   import Note from './Note.svelte'
   import Profile from './Profile.svelte'
@@ -38,18 +37,14 @@
     <Sidenav />
   </div>
   <div class="has-background-white-ter" id="main">
-    {#if $state.initialised}
-      <Router {routes} />
-      <span
-        class="icon is-large has-background-primary is-clickable float"
-        on:click={toggleNav}
-        in:fly={{y: 200, duration: 500}}
-      >
-        <ion-icon name="menu-sharp" />
-      </span>
-    {:else}
-      <p class="subtitle my-5">Loading...</p>
-    {/if}
+    <Router {routes} />
+    <span
+      class="icon is-large has-background-primary is-clickable float"
+      on:click={toggleNav}
+      in:fly={{y: 200, duration: 500}}
+    >
+      <ion-icon name="menu-sharp" />
+    </span>
   </div>
 </section>
 

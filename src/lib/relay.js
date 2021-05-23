@@ -1,14 +1,26 @@
-import {relayPool, makeRandom32, verifySignature} from 'nostr-tools'
-import {update} from 'idb-keyval'
-import {idbSet, idbGet} from './db'
+import {get} from 'svelte/store'
+import {relayPool, getEventHash} from 'nostr-tools'
 
-export const relays = [
-  {host: 'wss://nostr-relay.herokuapp.com', policy: 'rw'},
-  {host: 'wss://moonbreeze.richardbondi.net/ws', policy: 'rw'},
-  {host: 'wss://nodestr-relay.dolu.dev/ws', policy: 'rw'}
-]
+import state, {secretKey} from '../stores/state'
+import {saveEvent, updateEvent} from './events'
 
 export const pool = relayPool()
+export const relays = JSON.parse(localStorage.getItem('relays') || 'null') || [
+  {host: 'wss://nostr-relay.herokuapp.com', policy: 'rw'},
+  {host: 'wss://moonbreeze.richardbondi.net/ws', policy: 'rw'},
+  {host: 'wss://nodestr-relay.dolu.dev/ws', policy: 'rw'},
+  {host: 'wss://nostr-relay.bigsun.xyz', policy: 'rw'}
+]
+
+export const initPool = async () => {
+  if (secretKey) {
+    pool.setPrivateKey(secretKey)
+  }
+
+  relays.forEach(relay => {
+    pool.addRelay(relay.host, parsePolicy(relay.policy))
+  })
+}
 
 export function parsePolicy(rw) {
   let policy = {}
@@ -17,21 +29,26 @@ export function parsePolicy(rw) {
   return policy
 }
 
-export const setRelays = () => {
-  idbSet('relays', [...relays])
-}
+export const publish = async event => {
+  event.pubkey = get(state).pubkey
+  event.created_at = Math.round(new Date().getTime() / 1000)
+  event.tags = event.tags || []
+  event.id = await getEventHash(event)
 
-export const subscribeRelays = async () => {
-  let r = await idbGet('relays')
-  r.map(relay => {
-    pool.addRelay(relay.host, parsePolicy(relay.policy))
+  await saveEvent(event)
+
+  await pool.publish(event, (status, url) => {
+    switch (status) {
+      case 0:
+        console.log(`sent to ${url}`, event)
+        break
+      case 1:
+        console.log(`published to ${url}`, event)
+        break
+      case -1:
+        console.log(`publish failed on ${url}`, event)
+        break
+    }
+    updateEvent(event.id, {[`status.${url}`]: status})
   })
 }
-
-export const getNewKey = () => {
-  let secretKey = Buffer.from(makeRandom32()).toString('hex')
-  localStorage.setItem('key', secretKey)
-  return secretKey
-}
-
-export const validSig = key => verifySignature(key)

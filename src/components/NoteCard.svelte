@@ -1,7 +1,7 @@
 <script>
-  import {pool} from '../lib/relay'
+  import {publish} from '../lib/relay'
   import {fly} from 'svelte/transition'
-  import state from '../stores/store'
+  import metadata from '../stores/metadata'
   import {humanDate, abbr} from '../lib/helpers'
   import {push} from 'svelte-spa-router'
 
@@ -11,34 +11,20 @@
   let replyMsg = ''
   let isReply = note.tags.length
   let originalNote
-  let meta = {}
-
-  $: meta = $state.metadata.get(note.pubkey)
 
   if (isReply) {
     originalNote = note.tags[0][1]
   }
 
   const sendReply = id => {
-    const msg = {
-      pubkey: state.pubKeyHex($state.key),
-      created_at: Math.round(new Date().getTime() / 1000),
-      tags: [['e', id, '']],
-      ref: id,
-      kind: 1,
-      content: replyMsg.trim()
-    }
     try {
-      pool.publish(msg, (status, url) => {
-        if (status === 0) {
-          console.log(`publish request sent to ${url}`)
-        }
-        if (status === 1) {
-          console.log(`event published by ${url}`)
-        }
+      publish({
+        tags: [['e', id]],
+        kind: 1,
+        content: replyMsg.trim()
       })
     } catch (e) {
-      console.error('Something went wrong:', e)
+      console.error('error publishing reply', e)
     }
     replyMsg = ''
     replying = false
@@ -51,9 +37,10 @@
       <figure class="media-left is-clickable">
         <p class="image is-32x32">
           <img
+            alt=""
             on:click={() => push(`#/u/${note.pubkey}`)}
             class="is-rounded"
-            src={meta?.picture ??
+            src={$metadata.picture ||
               'https://bulma.io/images/placeholders/128x128.png'}
           />
         </p>
@@ -86,7 +73,11 @@
     </div>
   </div>
   <footer class="card-footer">
-    <span class="icon is-medium" on:click={() => (replying = !replying)}>
+    <span
+      class="icon is-medium"
+      on:click={() => (replying = !replying)}
+      title="Reply"
+    >
       <ion-icon name="chatbox-ellipses-sharp" />
     </span>
     {#if replying}
@@ -100,6 +91,7 @@
         </p>
         <p class="control">
           <a
+            href="_"
             class="button is-ghost"
             on:click|preventDefault={() => sendReply(note.id)}
           >
@@ -117,9 +109,9 @@
   }
   .card-footer {
     display: flex;
-    flex-flow: column;
     align-items: center;
     border: none;
+    justify-content: flex-end;
   }
 
   .card-footer > span {

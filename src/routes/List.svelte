@@ -1,9 +1,10 @@
 <script>
   import {onMount} from 'svelte'
-  import state from '../stores/store'
-  import {pool} from '../lib/relay'
-  import NoteCard from '../components/NoteCard.svelte'
   import {push} from 'svelte-spa-router'
+
+  import feed from '../stores/feed'
+  import NoteCard from '../components/NoteCard.svelte'
+  import {publish} from '../lib/relay'
 
   let note = ''
   let search = ''
@@ -30,25 +31,17 @@
   const publishNote = async ev => {
     ev.preventDefault()
     publishing = true
-    const msg = {
-      pubkey: state.pubKeyHex($state.key),
-      created_at: Math.round(new Date().getTime() / 1000),
-      tags: [],
-      kind: 1,
-      content: note.trim()
-    }
+
     try {
-      await pool.publish(msg, (status, url) => {
-        if (status === 0) {
-          console.log(`publish request sent to ${url}`)
-        }
-        if (status === 1) {
-          console.log(`event published by ${url}`)
-        }
+      await publish({
+        tags: [],
+        kind: 1,
+        content: note.trim()
       })
     } catch (e) {
-      console.error('Something went wrong:', e)
+      console.error('error publishing text note', e)
     }
+
     note = ''
     publishing = false
   }
@@ -83,12 +76,15 @@
     <div class="block">
       <button
         class="button is-primary is-rounded is-pulled-right button"
-        on:click={publishNote}>Send</button
+        on:click={publishNote}
+        disabled={publishing}
       >
+        Send
+      </button>
     </div>
   </div>
   <div class="notes">
-    {#each Array.from($state.home.values()) as note}
+    {#each $feed as note}
       <NoteCard {note} />
     {/each}
   </div>
@@ -99,11 +95,6 @@
     display: grid;
     grid-template-columns: 1fr 0.75fr;
     align-items: flex-end;
-  }
-  .navbar,
-  .navbar-menu {
-    background-color: none;
-    background: none;
   }
   .post {
     display: grid;
