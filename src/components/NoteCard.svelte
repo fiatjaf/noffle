@@ -76,7 +76,7 @@
       on:click={() => (replying = !replying)}
       title="Reply"
     >
-      <ion-icon name="chatbox-ellipses-sharp" />
+      <i class="icon ion-md-chatboxes" />
     </span>
     {#if replying}
       <div class="field is-grouped">

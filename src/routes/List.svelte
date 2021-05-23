@@ -61,7 +61,7 @@
         on:keypress={keyPress}
       />
       <span class="icon is-medium is-left">
-        <ion-icon name="search-outline" />
+        <i class="icon ion-md-search" />
       </span>
     </div>
   </header>

@@ -53,7 +53,7 @@
       <span>{params.profile}</span>
       {#if self}
         <span class="icon">
-          <ion-icon name="person-circle-sharp" />
+          <i class="icon ion-md-person" />
         </span>
       {/if}
     </span>

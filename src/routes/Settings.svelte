@@ -18,16 +18,16 @@
       <p class="help">This will reset your Nostr account</p>
     </div>
     <div class="field my-6">
+      Import/Export account
       <div class="columns">
         <div>
-          Import/Export account
           <div class="column">
             <div class="file is-normal">
               <label class="file-label">
                 <input class="file-input" type="file" name="resume" />
                 <span class="file-cta">
                   <span class="file-icon">
-                    <ion-icon name="cloud-upload-sharp" />
+                    <i class="icon ion-md-cloud-upload" />
                   </span>
                   <span class="file-label">Upload</span>
                 </span>
@@ -39,7 +39,7 @@
         <div class="column">
           <button class="button">
             <span class="icon">
-              <ion-icon name="cloud-download-sharp" />
+              <i class="icon ion-md-cloud-download" />
             </span>
             <span>Download</span>
           </button>

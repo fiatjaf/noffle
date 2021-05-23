@@ -43,7 +43,7 @@
       on:click={toggleNav}
       in:fly={{y: 200, duration: 500}}
     >
-      <ion-icon name="menu-sharp" />
+      <i class="icon ion-md-menu" />
     </span>
   </div>
 </section>
