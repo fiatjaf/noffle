@@ -15,12 +15,6 @@
   let replyMsg = ''
 
   $: author = $metadata[note.pubkey] || {...emptyMetadata()}
-  $: {
-    console.log($metadata)
-  }
-  $: {
-    console.log(author)
-  }
 
   const sendReply = id => {
     try {

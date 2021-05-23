@@ -24,7 +24,7 @@
   })
 
   $: self = params.profile === pubkey
-  $: meta = (self ? $metadata.self : $browsing.metadata) || emptyMetadata()
+  $: meta = $metadata[params.profile] || {...emptyMetadata()}
   $: isFollowing = $following.includes(params.profile)
   $: followAction = isFollowing ? 'Unfollow' : 'Follow'
 
@@ -52,12 +52,12 @@
     <h1 class="title">Profile</h1>
 
     <p>
+      <code>{params.profile}</code>
       {#if self}
         <span class="icon">
           <i class="icon ion-md-person" />
         </span>
       {/if}
-      <code>{params.profile}</code>
     </p>
     <p class="subtitle">
       {#if meta.picture}
@@ -132,5 +132,8 @@
   .right {
     display: flex;
     flex-flow: row-reverse;
+  }
+  code {
+    padding: 0;
   }
 </style>

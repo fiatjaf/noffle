@@ -36,17 +36,19 @@ const sub = pool.sub({
         if (current.notes.findIndex(ev => ev.id === event.id) !== -1) return
 
         current.notes.push(event)
-        current.notes.sort((a, b) => b.created_at - a.created_at).slice(0, 100)
+        current.notes = current.notes
+          .sort((a, b) => b.created_at - a.created_at)
+          .slice(0, 100)
         base.set(current)
         break
       case KIND_METADATA:
-        if (event.created_at > current.metadata) {
+        if (event.created_at > current.metadata.created_at) {
           current.metadata = event
           base.set(current)
         }
         break
       case KIND_CONTACTLIST:
-        if (event.created_at > current.contactList) {
+        if (event.created_at > current.contactList.created_at) {
           current.contactList = event
           base.set(current)
         }
@@ -66,27 +68,31 @@ export default {
     current = initial()
     base.set(current)
 
-    sub.sub({
-      filter: [
-        {
-          author: selected.pubkey,
-          kind: KIND_METADATA
-        },
-        {
-          author: selected.pubkey,
-          since: Math.round(Date.now() / 1000 - 60 * 60 * 24 * 7),
-          kind: KIND_TEXTNOTE
-        },
-        {
-          author: selected.pubkey,
-          since: Math.round(Date.now() / 1000 - 60 * 60 * 24 * 7),
-          kind: KIND_RECOMMENDSERVER
-        },
-        {
-          author: selected.pubkey,
-          kind: KIND_CONTACTLIST
-        }
-      ]
-    })
+    setTimeout(
+      () =>
+        sub.sub({
+          filter: [
+            {
+              author: selected.pubkey,
+              kind: KIND_METADATA
+            },
+            {
+              author: selected.pubkey,
+              since: Math.round(Date.now() / 1000 - 60 * 60 * 24 * 7),
+              kind: KIND_TEXTNOTE
+            },
+            {
+              author: selected.pubkey,
+              since: Math.round(Date.now() / 1000 - 60 * 60 * 24 * 7),
+              kind: KIND_RECOMMENDSERVER
+            },
+            {
+              author: selected.pubkey,
+              kind: KIND_CONTACTLIST
+            }
+          ]
+        }),
+      1
+    )
   }
 }
