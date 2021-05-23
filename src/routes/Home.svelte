@@ -9,6 +9,7 @@
   import Following from './Following.svelte'
   import Settings from './Settings.svelte'
   import Sidenav from '../components/Sidenav.svelte'
+  import TopNav from '../components/Topnav.svelte'
 
   let sidenav
 
@@ -37,6 +38,7 @@
     <Sidenav />
   </div>
   <div class="has-background-white-ter" id="main">
+    <TopNav />
     <Router {routes} />
     <span
       class="icon is-large has-background-primary is-clickable float"

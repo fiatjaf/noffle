@@ -1,7 +1,7 @@
 <script>
   import {onMount} from 'svelte'
 
-  import {sanitizeString} from '../lib/helpers'
+  import {emptyMetadata, sanitizeString} from '../lib/helpers'
   import state, {pubkey} from '../stores/state'
   import metadata from '../stores/metadata'
   import following from '../stores/following'
@@ -11,22 +11,25 @@
   export let params
 
   let edit = {}
-  let unsub = metadata.subscribe(m => {
-    if (m.exists)
-      edit = {
-        picture: $metadata.picture,
-        about: $metadata.about,
-        name: $metadata.name
-      }
-    setTimeout(() => unsub(), 1)
+  onMount(() => {
+    let unsub = metadata.subscribe(m => {
+      if (m.self)
+        edit = {
+          picture: $metadata.picture,
+          about: $metadata.about,
+          name: $metadata.name
+        }
+      setTimeout(() => unsub(), 1)
+    })
   })
 
   $: self = params.profile === pubkey
+  $: meta = (self ? $metadata.self : $browsing.metadata) || emptyMetadata()
   $: isFollowing = $following.includes(params.profile)
   $: followAction = isFollowing ? 'Unfollow' : 'Follow'
 
   onMount(() => {
-    browsing.setFilter({author: params.profile})
+    browsing.setPubkey(params.profile)
   })
 
   async function setMetadata(e) {
@@ -47,16 +50,22 @@
 <div class="px-4">
   <header class="block my-5">
     <h1 class="title">Profile</h1>
-    <p class="subtitle">{$metadata.name || 'Anon'}</p>
-    <p>{$metadata.about || ''}</p>
-    <span class="icon-text">
-      <span>{params.profile}</span>
+
+    <p>
       {#if self}
         <span class="icon">
           <i class="icon ion-md-person" />
         </span>
       {/if}
-    </span>
+      <code>{params.profile}</code>
+    </p>
+    <p class="subtitle">
+      {#if meta.picture}
+        <img alt="~" class="is-64x64 image" src={meta.picture} />
+      {/if}
+      {meta.name || 'Anon'}
+    </p>
+    <p>{meta.about || ''}</p>
   </header>
   {#if self}
     <div class="block">
@@ -113,7 +122,7 @@
   {/if}
   <div class="block my-5">
     <h2 class="subtitle">Notes</h2>
-    {#each $browsing as note}
+    {#each $browsing.notes as note}
       <NoteCard {note} />
     {/each}
   </div>

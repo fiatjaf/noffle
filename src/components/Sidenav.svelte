@@ -2,12 +2,13 @@
   import metadata from '../stores/metadata'
   import following from '../stores/following'
   import {pubkey} from '../stores/state'
-  import {abbr} from '../lib/helpers'
 </script>
 
 <aside>
   <div class="block">
-    <h2 class="title has-text-light">Nostrept</h2>
+    <h2 class="title has-text-light">
+      <a href="#/">Nostrept</a>
+    </h2>
   </div>
   <div class="block">
     <div class="media">
@@ -15,16 +16,18 @@
         <img
           alt="~"
           class="is-64x64 image"
-          src={$metadata.picture ||
+          src={$metadata.self?.picture ||
             'https://bulma.io/images/placeholders/128x128.png'}
         />
       </figure>
       <div class="media-content">
         <div class="content">
           <p>
-            <strong class="has-text-light">{$metadata.name || 'Anon'}</strong>
+            <strong class="has-text-light"
+              >{$metadata.self?.name || 'Anon'}</strong
+            >
             <br />
-            <small>{abbr(pubkey)}</small>
+            <small class="abbr">{pubkey}</small>
           </p>
         </div>
       </div>
@@ -85,5 +88,14 @@
     aside {
       position: fixed;
     }
+  }
+  .abbr {
+    width: 82px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+  h2 a {
+    color: inherit;
   }
 </style>

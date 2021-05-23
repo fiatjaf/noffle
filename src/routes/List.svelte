@@ -1,32 +1,10 @@
 <script>
-  import {onMount} from 'svelte'
-  import {push} from 'svelte-spa-router'
-
   import feed from '../stores/feed'
   import NoteCard from '../components/NoteCard.svelte'
   import {publish} from '../lib/relay'
 
   let note = ''
-  let search = ''
   let publishing = false
-
-  onMount(() => {
-    console.log('list')
-  })
-
-  const keyPress = e => {
-    if (e.charCode === 13) searchUser()
-  }
-
-  const searchUser = () => {
-    // console.log(search, search.length)
-    if (search.length !== 64) {
-      console.log('Not valid user pubkey!')
-      return
-    }
-    push(`#/u/${search.trim()}`)
-    search = ''
-  }
 
   const publishNote = async ev => {
     ev.preventDefault()
@@ -48,23 +26,6 @@
 </script>
 
 <div class="px-4">
-  <header class="header my-2">
-    <div class="greet">
-      <p class="subtitle">Hello, what's on your mind</p>
-    </div>
-    <div class="control has-icons-left">
-      <input
-        class="input"
-        type="text"
-        placeholder="Search..."
-        bind:value={search}
-        on:keypress={keyPress}
-      />
-      <span class="icon is-medium is-left">
-        <i class="icon ion-md-search" />
-      </span>
-    </div>
-  </header>
   <div class="post my-5">
     <div class="block">
       <textarea
@@ -91,11 +52,6 @@
 </div>
 
 <style>
-  header {
-    display: grid;
-    grid-template-columns: 1fr 0.75fr;
-    align-items: flex-end;
-  }
   .post {
     display: grid;
   }

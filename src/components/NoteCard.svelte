@@ -1,19 +1,25 @@
 <script>
-  import {publish} from '../lib/relay'
   import {fly} from 'svelte/transition'
-  import metadata from '../stores/metadata'
-  import {humanDate, abbr} from '../lib/helpers'
   import {push} from 'svelte-spa-router'
+
+  import {publish} from '../lib/relay'
+  import metadata from '../stores/metadata'
+  import {humanDate, abbr, emptyMetadata} from '../lib/helpers'
 
   export let note
 
+  let inReplyTo = note.tags.find(
+    ([tag, id]) => tag === 'e' && typeof id === 'string'
+  )
   let replying = false
   let replyMsg = ''
-  let isReply = note.tags.length
-  let originalNote
 
-  if (isReply) {
-    originalNote = note.tags[0][1]
+  $: author = $metadata[note.pubkey] || {...emptyMetadata()}
+  $: {
+    console.log($metadata)
+  }
+  $: {
+    console.log(author)
   }
 
   const sendReply = id => {
@@ -39,25 +45,27 @@
           alt="~"
           class="is-48x48 image"
           on:click={() => push(`#/u/${note.pubkey}`)}
-          src={$metadata.picture ||
+          src={author.picture ||
             'https://bulma.io/images/placeholders/128x128.png'}
         />
       </figure>
       <div class="media-content">
         <div class="content">
           <p>
+            {#if author.name}
+              {author.name}
+            {/if}
             <strong
-              class="is-clickable"
+              class="is-clickable abbr"
               on:click={() => push(`#/u/${note.pubkey}`)}
             >
-              {abbr(note.pubkey)}
+              {note.pubkey}
             </strong>
-            <br />
             <small>{humanDate(note.created_at)}</small>
             <br />
-            {#if isReply}
-              <a href={`#/n/${originalNote}`}>
-                <small>In reply to {abbr(originalNote)}</small>
+            {#if inReplyTo}
+              <a href={`#/n/${inReplyTo}`}>
+                <small>In reply to {abbr(inReplyTo[1])}</small>
               </a>
             {/if}
           </p>
@@ -133,5 +141,12 @@
     border-radius: 0;
     border-bottom: 1px solid gray;
     box-shadow: none;
+  }
+
+  .abbr {
+    width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
   }
 </style>

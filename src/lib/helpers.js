@@ -13,3 +13,9 @@ export const sanitizeString = str => {
     return '&#' + c.charCodeAt(0) + ';'
   })
 }
+
+export const emptyMetadata = () => ({
+  name: null,
+  about: null,
+  picture: null
+})

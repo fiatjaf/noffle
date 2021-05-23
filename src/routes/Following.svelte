@@ -1,12 +1,6 @@
 <script>
   import following from '../stores/following'
   import {pubkey} from '../stores/state'
-
-  function getMeta(key) {
-    // let meta = $state.metadata.get(key)
-    // console.log('get')
-    // return meta
-  }
 </script>
 
 <section class="px-4">
