@@ -11,12 +11,12 @@ export default derived(state, $state => {
 
   const event = $state.metadataEvent
 
-  if (event) {
+  if (event && event.content && event.content !== '') {
     try {
       const content = JSON.parse(event.content)
-      metadata = {...metadata, ...content}
+      metadata = {...metadata, ...content, exists: true}
     } catch (err) {
-      console.log('error parsing our own metadata content', err)
+      console.log('error parsing our own metadata content', event.content, err)
     }
   }
 

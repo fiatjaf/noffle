@@ -1,7 +1,7 @@
 <script>
   import metadata from '../stores/metadata'
- import following from '../stores/following'
-  import state from '../stores/state'
+  import following from '../stores/following'
+  import {pubkey} from '../stores/state'
   import {abbr} from '../lib/helpers'
 </script>
 
@@ -12,21 +12,19 @@
   <div class="block">
     <div class="media">
       <figure class="media-left">
-        <p class="image is-64x64">
-          <img
-            alt="~"
-            class="is-rounded"
-            src={$metadata.picture ||
-              'https://bulma.io/images/placeholders/128x128.png'}
-          />
-        </p>
+        <img
+          alt="~"
+          class="is-64x64 image"
+          src={$metadata.picture ||
+            'https://bulma.io/images/placeholders/128x128.png'}
+        />
       </figure>
       <div class="media-content">
         <div class="content">
           <p>
-            <strong class="has-text-light">{metadata.name || 'Anon'}</strong>
+            <strong class="has-text-light">{$metadata.name || 'Anon'}</strong>
             <br />
-            <small>{abbr($state.pubkey)}</small>
+            <small>{abbr(pubkey)}</small>
           </p>
         </div>
       </div>
@@ -36,7 +34,7 @@
     <div class="menu">
       <ul class="menu-list">
         <li>
-          <a class="has-text-light" href={`#/u/${$state.pubkey}`}>Profile</a>
+          <a class="has-text-light" href={`#/u/${pubkey}`}>Profile</a>
         </li>
         <li><a class="has-text-light" href="#/">News</a></li>
         <li>

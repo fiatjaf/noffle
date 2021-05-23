@@ -1,7 +1,6 @@
-import {get} from 'svelte/store'
 import {relayPool, getEventHash} from 'nostr-tools'
 
-import state, {secretKey} from '../stores/state'
+import {secretKey, pubkey} from '../stores/state'
 import {saveEvent, updateEvent} from './events'
 
 export const pool = relayPool()
@@ -30,7 +29,7 @@ export function parsePolicy(rw) {
 }
 
 export const publish = async event => {
-  event.pubkey = get(state).pubkey
+  event.pubkey = pubkey
   event.created_at = Math.round(new Date().getTime() / 1000)
   event.tags = event.tags || []
   event.id = await getEventHash(event)
@@ -49,6 +48,6 @@ export const publish = async event => {
         console.log(`publish failed on ${url}`, event)
         break
     }
-    updateEvent(event.id, {[`status.${url}`]: status})
+    updateEvent(event.id, {[`status."${url}"`]: status})
   })
 }

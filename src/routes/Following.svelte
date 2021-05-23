@@ -1,6 +1,6 @@
 <script>
-  import state from '../stores/state'
   import following from '../stores/following'
+  import {pubkey} from '../stores/state'
 
   function getMeta(key) {
     // let meta = $state.metadata.get(key)
@@ -14,7 +14,7 @@
     <h1 class="title">Following</h1>
   </header>
   <div class="following">
-    {#each $following.filter(f => f !== $state.pubkey) as follow}
+    {#each $following.filter(f => f !== pubkey) as follow}
       <div class="block">
         <div class="media">
           <figure class="media-left">

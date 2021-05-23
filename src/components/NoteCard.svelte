@@ -35,15 +35,13 @@
   <header class="card-header is-shadowless">
     <div class="media">
       <figure class="media-left is-clickable">
-        <p class="image is-32x32">
-          <img
-            alt=""
-            on:click={() => push(`#/u/${note.pubkey}`)}
-            class="is-rounded"
-            src={$metadata.picture ||
-              'https://bulma.io/images/placeholders/128x128.png'}
-          />
-        </p>
+        <img
+          alt="~"
+          class="is-48x48 image"
+          on:click={() => push(`#/u/${note.pubkey}`)}
+          src={$metadata.picture ||
+            'https://bulma.io/images/placeholders/128x128.png'}
+        />
       </figure>
       <div class="media-content">
         <div class="content">

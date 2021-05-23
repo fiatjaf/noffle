@@ -7,18 +7,32 @@ import {publish} from '../lib/relay'
 export const secretKey =
   localStorage.getItem('key') || Buffer.from(makeRandom32()).toString('hex')
 localStorage.setItem('key', secretKey)
+export const pubkey = getPublicKey(secretKey)
 
 const initialState = {
-  pubkey: '',
-  metadataEvent: null,
-  contactListEvent: null
+  metadataEvent: getBlankEvent(),
+  contactListEvent: getBlankEvent()
 }
 
 const base = writable(initialState)
 
 export default {
   subscribe: base.subscribe,
-  updateFollow: async (action, pubkey) => {
+
+  async updateMetadata(values) {
+    const newMetadataEvent = {
+      kind: 0,
+      content: JSON.stringify(values)
+    }
+    await publish(newMetadataEvent)
+
+    base.update(state => {
+      state.metadataEvent = newMetadataEvent
+      return state
+    })
+  },
+
+  async updateFollow(action, pubkey) {
     const {tags} = get(base).contactListEvent
     const newContactListEvent = {
       kind: 3,
@@ -26,24 +40,32 @@ export default {
       content: ''
     }
 
+    const index = tags.findIndex(([_t, key, _r, _n]) => key === pubkey)
+    const updated = true
+
     switch (action) {
       case 'follow':
-        newContactListEvent.tags.push(['p', pubkey, null, null])
+        if (index === -1) {
+          newContactListEvent.tags.push(['p', pubkey, null, null])
+        }
         break
       case 'unfollow':
-        const index = tags.findIndex(([_t, key, _r, _n]) => key === pubkey)
-        newContactListEvent.tags.splice(index, 1)
+        if (index !== -1) {
+          newContactListEvent.tags.splice(index, 1)
+        }
         break
     }
 
-    await publish(newContactListEvent)
-
-    base.update(state => {
-      state.contactListEvent = newContactListEvent
-      return state
-    })
+    if (updated) {
+      await publish(newContactListEvent)
+      base.update(state => {
+        state.contactListEvent = newContactListEvent
+        return state
+      })
+    }
   },
-  initStore: async () => {
+
+  async initStore() {
     const [
       metadataEvent = getBlankEvent(),
       contactListEvent = getBlankEvent(),
@@ -54,7 +76,6 @@ export default {
       state.metadataEvent = metadataEvent
       state.contactListEvent = contactListEvent
       state.ourNotes = ourNotes
-      state.pubkey = getPublicKey(secretKey)
       return state
     })
   }

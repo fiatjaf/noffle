@@ -1,7 +1,6 @@
 import Dexie from 'dexie'
-import {get} from 'svelte/store'
 
-import state from '../stores/state'
+import {pubkey} from '../stores/state'
 
 Dexie.debug = true
 
@@ -20,12 +19,12 @@ export const getOurLatest = async kind => {
   const events = await db.events
     .where({
       kind,
-      pubkey: get(state).pubkey
+      pubkey
     })
     .reverse()
     .sortBy('created_at')
 
-  if (events.length === 0) return null
+  if (events.length === 0) return undefined
 
   if (kind === 3 || kind === 0) {
     // delete previous
@@ -43,7 +42,7 @@ export const getOurNotes = () =>
   db.events
     .where({
       kind: 1,
-      pubkey: get(state).pubkey
+      pubkey
     })
     .reverse()
     .sortBy('created_at')

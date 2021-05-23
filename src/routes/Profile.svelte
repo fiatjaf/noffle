@@ -2,18 +2,26 @@
   import {onMount} from 'svelte'
 
   import {sanitizeString} from '../lib/helpers'
-  import state from '../stores/state'
+  import state, {pubkey} from '../stores/state'
   import metadata from '../stores/metadata'
   import following from '../stores/following'
   import browsing from '../stores/browsing'
-  import {publish} from '../lib/relay'
   import NoteCard from '../components/NoteCard.svelte'
 
   export let params
 
-  const edit = {picture: null, about: null, name: null}
+  let edit = {}
+  let unsub = metadata.subscribe(m => {
+    if (m.exists)
+      edit = {
+        picture: $metadata.picture,
+        about: $metadata.about,
+        name: $metadata.name
+      }
+    setTimeout(() => unsub(), 1)
+  })
 
-  $: self = params.profile === $state.pubkey
+  $: self = params.profile === pubkey
   $: isFollowing = $following.includes(params.profile)
   $: followAction = isFollowing ? 'Unfollow' : 'Follow'
 
@@ -23,19 +31,11 @@
 
   async function setMetadata(e) {
     e.preventDefault()
-
-    try {
-      publish({
-        kind: 0,
-        content: JSON.stringify({
-          picture: edit.picture && window.encodeURI(edit.picture.trim()),
-          about: edit.about && sanitizeString(edit.about),
-          name: edit.name && sanitizeString(edit.name)
-        })
-      })
-    } catch (e) {
-      console.error(e)
-    }
+    state.updateMetadata({
+      picture: edit.picture && window.encodeURI(edit.picture.trim()),
+      about: edit.about && sanitizeString(edit.about),
+      name: edit.name && sanitizeString(edit.name)
+    })
   }
 
   const handleFollow = ev => {
@@ -47,8 +47,8 @@
 <div class="px-4">
   <header class="block my-5">
     <h1 class="title">Profile</h1>
-    <p class="subtitle">{metadata.name || 'Anon'}</p>
-    <p>{metadata.about || ''}</p>
+    <p class="subtitle">{$metadata.name || 'Anon'}</p>
+    <p>{$metadata.about || ''}</p>
     <span class="icon-text">
       <span>{params.profile}</span>
       {#if self}

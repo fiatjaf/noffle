@@ -21,7 +21,7 @@ const sub = pool.sub({
     }
   },
   filter: {
-    kind: -1 // hopefully with this we will fetch nothing
+    kind: 255 // hopefully with this we will fetch nothing
   }
 })
 

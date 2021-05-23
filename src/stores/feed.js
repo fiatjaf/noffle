@@ -1,5 +1,6 @@
 import {readable, get} from 'svelte/store'
 
+import {pubkey} from '../stores/state'
 import {pool} from '../lib/relay'
 import following from './following'
 import {KIND_TEXTNOTE} from '../constants'
@@ -19,9 +20,14 @@ export default readable([], set => {
       }
     },
     filter: {
-      authors: get(following)
+      authors: addOurOwnKey(get(following))
     }
   })
 
-  following.subscribe(keys => feed.sub({filter: {authors: keys}}))
+  following.subscribe(keys => feed.sub({filter: {authors: addOurOwnKey(keys)}}))
 })
+
+function addOurOwnKey(keys) {
+  if (keys.indexOf(pubkey) === -1) keys.push(pubkey)
+  return keys
+}
