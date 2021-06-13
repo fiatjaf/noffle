@@ -1,7 +1,8 @@
-import {writable, get} from 'svelte/store'
+import {writable} from 'svelte/store'
 import {getPublicKey, getBlankEvent, makeRandom32} from 'nostr-tools'
 
-import {getOurLatest, getOurNotes} from '../lib/events'
+import {getOurNotes, getOurLatest, getStoredMetadata} from '../lib/events'
+import {emptyMetadata} from '../lib/helpers'
 import {publish} from '../lib/relay'
 
 export const secretKey =
@@ -11,16 +12,19 @@ export const pubkey = getPublicKey(secretKey)
 
 const initialState = {
   metadataEvent: getBlankEvent(),
-  contactListEvent: getBlankEvent()
+  contactListEvent: getBlankEvent(),
+  getStoredMetadata: [],
+  ourNotes: []
 }
 
 const base = writable(initialState)
 
 export default {
   subscribe: base.subscribe,
+  update: base.update,
 
   async updateMetadata(values) {
-    const newMetadataEvent = {
+    let newMetadataEvent = {
       kind: 0,
       content: JSON.stringify(values)
     }
@@ -32,50 +36,34 @@ export default {
     })
   },
 
-  async updateFollow(action, pubkey) {
-    const {tags} = get(base).contactListEvent
-    const newContactListEvent = {
-      kind: 3,
-      tags,
-      content: ''
-    }
-
-    const index = tags.findIndex(([_t, key, _r, _n]) => key === pubkey)
-    const updated = true
-
-    switch (action) {
-      case 'follow':
-        if (index === -1) {
-          newContactListEvent.tags.push(['p', pubkey, null, null])
-        }
-        break
-      case 'unfollow':
-        if (index !== -1) {
-          newContactListEvent.tags.splice(index, 1)
-        }
-        break
-    }
-
-    if (updated) {
-      await publish(newContactListEvent)
-      base.update(state => {
-        state.contactListEvent = newContactListEvent
-        return state
-      })
-    }
-  },
-
   async initStore() {
     const [
       metadataEvent = getBlankEvent(),
       contactListEvent = getBlankEvent(),
-      ourNotes
-    ] = await Promise.all([getOurLatest(0), getOurLatest(3), getOurNotes()])
+      ourNotes,
+      storedMetadata
+    ] = await Promise.all([
+      getOurLatest(0),
+      getOurLatest(3),
+      getOurNotes(),
+      getStoredMetadata()
+    ])
 
     base.update(state => {
       state.metadataEvent = metadataEvent
       state.contactListEvent = contactListEvent
       state.ourNotes = ourNotes
+      state.getStoredMetadata = Object.fromEntries(
+        storedMetadata.map(metadata => {
+          var value
+          try {
+            value = JSON.parse(metadata.content)
+          } catch (err) {
+            value = emptyMetadata()
+          }
+          return [metadata.pubkey, value]
+        })
+      )
       return state
     })
   }

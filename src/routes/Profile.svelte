@@ -2,6 +2,7 @@
   import {onMount} from 'svelte'
 
   import {emptyMetadata, sanitizeString} from '../lib/helpers'
+  import {updateFollow} from '../lib/actions'
   import state, {pubkey} from '../stores/state'
   import metadata from '../stores/metadata'
   import following from '../stores/following'
@@ -25,7 +26,8 @@
 
   $: self = params.profile === pubkey
   $: meta = $metadata[params.profile] || {...emptyMetadata()}
-  $: isFollowing = $following.includes(params.profile)
+  $: isFollowing =
+    $following.findIndex(({pubkey}) => pubkey === params.profile) !== -1
   $: followAction = isFollowing ? 'Unfollow' : 'Follow'
 
   onMount(() => {
@@ -43,7 +45,7 @@
 
   const handleFollow = ev => {
     ev.preventDefault()
-    state.updateFollow(followAction.toLowerCase(), params.profile)
+    updateFollow(followAction.toLowerCase(), params.profile)
   }
 </script>
 

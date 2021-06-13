@@ -8,7 +8,7 @@
     <h1 class="title">Following</h1>
   </header>
   <div class="following">
-    {#each $following.filter(f => f !== pubkey) as follow}
+    {#each $following.filter(f => f.pubkey !== pubkey) as follow}
       <div class="block">
         <div class="media">
           <figure class="media-left">
@@ -16,7 +16,7 @@
               <img
                 alt=""
                 class="is-rounded"
-                src={getMeta(follow)?.picture ??
+                src={follow.picture ??
                   'https://bulma.io/images/placeholders/128x128.png'}
               />
             </p>

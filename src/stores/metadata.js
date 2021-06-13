@@ -31,5 +31,9 @@ export default derived([state, browsing], ([$state, $browsing]) => {
     }
   }
 
+  for (let pubkey in $state.storedMetadata) {
+    all[pubkey] = $state.storedMetadata[pubkey]
+  }
+
   return all
 })

@@ -46,3 +46,15 @@ export const getOurNotes = () =>
     })
     .reverse()
     .sortBy('created_at')
+
+export const getStoredMetadata = () => db.events.where({kind: 0}).toArray()
+
+export const deleteStoredMetadataFor = async pubkey => {
+  let events = await db.events.where({kind: 0}).toArray()
+  for (let i = 0; i < events.length; i++) {
+    let event = events[i]
+    if (event.pubkey === pubkey) {
+      await db.bulkDelete([event.id])
+    }
+  }
+}

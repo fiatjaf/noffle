@@ -4,10 +4,11 @@ import state from './state'
 
 export default derived(state, $state => {
   const event = $state.metadataEvent
-
-  if (event) {
-    return event.tags.filter(([tag]) => tag === 'p').map(([_, key]) => key)
-  } else {
-    return []
-  }
+  const keys = event
+    ? event.tags.filter(([tag]) => tag === 'p').map(([_, key]) => key)
+    : []
+  return keys.map(key => ({
+    ...$state.storedMetadata[key],
+    pubkey: key
+  }))
 })
