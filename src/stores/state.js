@@ -2,7 +2,7 @@ import {writable} from 'svelte/store'
 import {getPublicKey, getBlankEvent, makeRandom32} from 'nostr-tools'
 
 import {getOurNotes, getOurLatest, getStoredMetadata} from '../lib/events'
-import {emptyMetadata} from '../lib/helpers'
+import {cacheMetadata} from '../lib/metadata'
 import {publish} from '../lib/relay'
 
 export const secretKey =
@@ -30,6 +30,8 @@ export default {
     }
     await publish(newMetadataEvent)
 
+    cacheMetadata(newMetadataEvent)
+
     base.update(state => {
       state.metadataEvent = newMetadataEvent
       return state
@@ -53,18 +55,11 @@ export default {
       state.metadataEvent = metadataEvent
       state.contactListEvent = contactListEvent
       state.ourNotes = ourNotes
-      state.getStoredMetadata = Object.fromEntries(
-        storedMetadata.map(metadata => {
-          var value
-          try {
-            value = JSON.parse(metadata.content)
-          } catch (err) {
-            value = emptyMetadata()
-          }
-          return [metadata.pubkey, value]
-        })
-      )
       return state
     })
+
+    for (let i = 0; i < storedMetadata.length; i++) {
+      cacheMetadata(storedMetadata[i])
+    }
   }
 }

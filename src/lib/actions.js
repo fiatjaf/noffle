@@ -2,8 +2,8 @@ import {get} from 'svelte/store'
 
 import {publish} from './relay'
 import {saveEvent, deleteStoredMetadataFor} from './events'
+import {getRawMetadataEvent} from './metadata'
 import state from '../stores/state'
-import metadata from '../stores/metadata'
 
 export async function updateFollow(action, pubkey) {
   let {tags} = get(state).contactListEvent
@@ -19,7 +19,7 @@ export async function updateFollow(action, pubkey) {
   switch (action) {
     case 'follow':
       if (index === -1) newContactListEvent.tags.push(['p', pubkey, null, null])
-      let event = get(metadata)[pubkey]
+      let event = getRawMetadataEvent(pubkey)
       if (event) await saveEvent(event)
       break
     case 'unfollow':

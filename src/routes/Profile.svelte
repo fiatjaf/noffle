@@ -3,31 +3,19 @@
 
   import {emptyMetadata, sanitizeString} from '../lib/helpers'
   import {updateFollow} from '../lib/actions'
+  import {getMetadata} from '../lib/metadata'
   import state, {pubkey} from '../stores/state'
-  import metadata from '../stores/metadata'
   import following from '../stores/following'
   import browsing from '../stores/browsing'
   import NoteCard from '../components/NoteCard.svelte'
 
   export let params
 
-  let edit = {}
-  onMount(() => {
-    let unsub = metadata.subscribe(m => {
-      if (m.self)
-        edit = {
-          picture: $metadata.picture,
-          about: $metadata.about,
-          name: $metadata.name
-        }
-      setTimeout(() => unsub(), 1)
-    })
-  })
+  let edit = getMetadata(pubkey)
 
   $: self = params.profile === pubkey
-  $: meta = $metadata[params.profile] || {...emptyMetadata()}
-  $: isFollowing =
-    $following.findIndex(({pubkey}) => pubkey === params.profile) !== -1
+  $: meta = getMetadata(params.profile) || emptyMetadata()
+  $: isFollowing = $following.includes(params.profile)
   $: followAction = isFollowing ? 'Unfollow' : 'Follow'
 
   onMount(() => {

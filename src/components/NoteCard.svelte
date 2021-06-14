@@ -3,7 +3,7 @@
   import {push} from 'svelte-spa-router'
 
   import {publish} from '../lib/relay'
-  import metadata from '../stores/metadata'
+  import {getMetadata} from '../lib/metadata'
   import {humanDate, abbr, emptyMetadata} from '../lib/helpers'
 
   export let note
@@ -14,7 +14,7 @@
   let replying = false
   let replyMsg = ''
 
-  $: author = $metadata[note.pubkey] || {...emptyMetadata()}
+  $: author = getMetadata(note.pubkey) || emptyMetadata()
 
   const sendReply = id => {
     try {

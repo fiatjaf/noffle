@@ -8,7 +8,7 @@
   }
 
   const searchUser = () => {
-    // console.log(search, search.length)
+    search = search.trim()
     if (search.length !== 64) {
       console.log('Not valid user pubkey!')
       return

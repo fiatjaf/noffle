@@ -1,5 +1,5 @@
 <script>
-  import metadata from '../stores/metadata'
+  import {getMetadata} from '../lib/metadata'
   import following from '../stores/following'
   import {pubkey} from '../stores/state'
 </script>
@@ -16,7 +16,7 @@
         <img
           alt="~"
           class="is-64x64 image"
-          src={$metadata.self?.picture ||
+          src={getMetadata(pubkey)?.picture ||
             'https://bulma.io/images/placeholders/128x128.png'}
         />
       </figure>
@@ -24,7 +24,7 @@
         <div class="content">
           <p>
             <strong class="has-text-light"
-              >{$metadata.self?.name || 'Anon'}</strong
+              >{getMetadata(pubkey)?.name || ''}</strong
             >
             <br />
             <small class="abbr">{pubkey}</small>

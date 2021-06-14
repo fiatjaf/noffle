@@ -2,6 +2,7 @@ import {writable} from 'svelte/store'
 import {getBlankEvent} from 'nostr-tools'
 
 import {pool} from '../lib/relay'
+import {cacheMetadata} from '../lib/metadata'
 import {
   KIND_TEXTNOTE,
   KIND_METADATA,
@@ -46,6 +47,9 @@ const sub = pool.sub({
           current.metadata = event
           base.set(current)
         }
+
+        cacheMetadata(event)
+
         break
       case KIND_CONTACTLIST:
         if (event.created_at > current.contactList.created_at) {
