@@ -2,9 +2,9 @@
   import {onMount} from 'svelte'
 
   import {emptyMetadata, sanitizeString} from '../lib/helpers'
-  import {updateFollow} from '../lib/actions'
+  import {updateFollow, updateMetadata} from '../lib/actions'
   import {getMetadata} from '../lib/metadata'
-  import state, {pubkey} from '../stores/state'
+  import {pubkey} from '../stores/state'
   import following from '../stores/following'
   import browsing from '../stores/browsing'
   import NoteCard from '../components/NoteCard.svelte'
@@ -24,7 +24,7 @@
 
   async function setMetadata(e) {
     e.preventDefault()
-    state.updateMetadata({
+    updateMetadata({
       picture: edit.picture && window.encodeURI(edit.picture.trim()),
       about: edit.about && sanitizeString(edit.about),
       name: edit.name && sanitizeString(edit.name)

@@ -1,23 +1,22 @@
 import {relayPool, getEventHash} from 'nostr-tools'
 
 import {secretKey, pubkey} from '../stores/state'
+import relays from '../stores/relays'
 import {saveEvent, updateEvent} from './events'
 
 export const pool = relayPool()
-export const relays = JSON.parse(localStorage.getItem('relays') || 'null') || [
-  {host: 'wss://nostr-relay.herokuapp.com', policy: 'rw'},
-  {host: 'wss://moonbreeze.richardbondi.net/ws', policy: 'rw'},
-  {host: 'wss://nodestr-relay.dolu.dev/ws', policy: 'rw'},
-  {host: 'wss://nostr-relay.bigsun.xyz', policy: 'rw'}
-]
 
 export const initPool = async () => {
   if (secretKey) {
     pool.setPrivateKey(secretKey)
   }
 
-  relays.forEach(relay => {
-    pool.addRelay(relay.host, parsePolicy(relay.policy))
+
+
+  relays.subscribe(relays => {
+    relays.forEach(relay => {
+      pool.addRelay(relay.host, parsePolicy(relay.policy))
+    })
   })
 }
 

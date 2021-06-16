@@ -2,7 +2,7 @@ import {get} from 'svelte/store'
 
 import {publish} from './relay'
 import {saveEvent, deleteStoredMetadataFor} from './events'
-import {getRawMetadataEvent} from './metadata'
+import {cacheMetadata, getRawMetadataEvent} from './metadata'
 import state from '../stores/state'
 
 export async function updateFollow(action, pubkey) {
@@ -35,4 +35,19 @@ export async function updateFollow(action, pubkey) {
       return state
     })
   }
+}
+
+export async function updateMetadata(values) {
+  let newMetadataEvent = {
+    kind: 0,
+    content: JSON.stringify(values)
+  }
+  await publish(newMetadataEvent)
+
+  cacheMetadata(newMetadataEvent)
+
+  state.update(state => {
+    state.metadataEvent = newMetadataEvent
+    return state
+  })
 }

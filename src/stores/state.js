@@ -3,7 +3,6 @@ import {getPublicKey, getBlankEvent, makeRandom32} from 'nostr-tools'
 
 import {getOurNotes, getOurLatest, getStoredMetadata} from '../lib/events'
 import {cacheMetadata} from '../lib/metadata'
-import {publish} from '../lib/relay'
 
 export const secretKey =
   localStorage.getItem('key') || Buffer.from(makeRandom32()).toString('hex')
@@ -22,21 +21,6 @@ const base = writable(initialState)
 export default {
   subscribe: base.subscribe,
   update: base.update,
-
-  async updateMetadata(values) {
-    let newMetadataEvent = {
-      kind: 0,
-      content: JSON.stringify(values)
-    }
-    await publish(newMetadataEvent)
-
-    cacheMetadata(newMetadataEvent)
-
-    base.update(state => {
-      state.metadataEvent = newMetadataEvent
-      return state
-    })
-  },
 
   async initStore() {
     const [
