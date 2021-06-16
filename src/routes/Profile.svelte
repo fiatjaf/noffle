@@ -3,7 +3,7 @@
 
   import {emptyMetadata, sanitizeString} from '../lib/helpers'
   import {updateFollow, updateMetadata} from '../lib/actions'
-  import {getMetadata} from '../lib/metadata'
+  import {getMetadataStore} from '../lib/metadata'
   import {pubkey} from '../stores/state'
   import following from '../stores/following'
   import browsing from '../stores/browsing'
@@ -11,10 +11,18 @@
 
   export let params
 
-  let edit = getMetadata(pubkey)
+  let meta = getMetadataStore(params.profile)
+  let edit = emptyMetadata()
+  let unsub = meta.subscribe($meta => {
+    edit = {...$meta}
+    if (edit.name && edit.name.length > 0) {
+      setTimeout(() => {
+        unsub()
+      }, 1)
+    }
+  })
 
   $: self = params.profile === pubkey
-  $: meta = getMetadata(params.profile) || emptyMetadata()
   $: isFollowing = $following.includes(params.profile)
   $: followAction = isFollowing ? 'Unfollow' : 'Follow'
 
@@ -50,12 +58,12 @@
       {/if}
     </p>
     <p class="subtitle">
-      {#if meta.picture}
-        <img alt="~" class="is-64x64 image" src={meta.picture} />
+      {#if $meta.picture}
+        <img alt="~" class="is-64x64 image" src={$meta.picture} />
       {/if}
-      {meta.name || 'Anon'}
+      {$meta.name || 'Anon'}
     </p>
-    <p>{meta.about || ''}</p>
+    <p>{$meta.about || ''}</p>
   </header>
   {#if self}
     <div class="block">

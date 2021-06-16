@@ -1,7 +1,9 @@
 <script>
-  import {getMetadata} from '../lib/metadata'
+  import {getMetadataStore} from '../lib/metadata'
   import following from '../stores/following'
   import {pubkey} from '../stores/state'
+
+  let meta = getMetadataStore(pubkey)
 </script>
 
 <aside>
@@ -16,16 +18,14 @@
         <img
           alt="~"
           class="is-64x64 image"
-          src={getMetadata(pubkey)?.picture ||
+          src={$meta.picture ||
             'https://bulma.io/images/placeholders/128x128.png'}
         />
       </figure>
       <div class="media-content">
         <div class="content">
           <p>
-            <strong class="has-text-light"
-              >{getMetadata(pubkey)?.name || ''}</strong
-            >
+            <strong class="has-text-light">{$meta.name || ''}</strong>
             <br />
             <small class="abbr">{pubkey}</small>
           </p>
