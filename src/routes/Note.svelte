@@ -8,42 +8,61 @@
 
   export let params
 
-  let s, note, comments
+  let s, note, comments, refs
   let replyMsg = ''
 
   const sendReply = () => {
     return
   }
 
-  $: params.note_id, getNote()
+  let basicFilter = [{id: params.note_id}, {'#e': params.note_id}]
+  let hasReceivedNote = false
 
   function getNote() {
-    comments = []
-    let _comments = new SortedMap(
-      comments.map(n => [n.id + ':' + n.created_at, n]),
-      (a, b) => b.split(':')[1] - a.split(':')[1]
-    )
+    let cmp = (a, b) => b.split(':')[1] - a.split(':')[1]
+    comments = new SortedMap([], cmp)
+    refs = new SortedMap([], cmp)
     s = pool.sub({
       cb: (event, _relay) => {
         if (event.id === params.note_id) {
           note = event
+
+          if (!hasReceivedNote) {
+            hasReceivedNote = true
+            sub.sub({
+              filter: basicFilter.concat(
+                note.tags.filter(([t]) => t === 'e').map(([_, v]) => v)
+              )
+            })
+          }
+        } else if (
+          event.id.tags.findIndex(([_, v]) => v === params.note_id) !== -1
+        ) {
+          comments.set(event.id + ':' + event.created_at, event)
         } else {
-          _comments.set(event.id + ':' + event.created_at, event)
-          comments = Array.from(_comments.values())
-          // console.log(event)
+          refs.set(event.id + ':' + event.created_at, event)
         }
       },
-      filter: [{id: params.note_id}, {'#e': params.note_id}]
+      filter: basicFilter
     })
-    s.unsub()
   }
 
   onMount(() => {
     getNote()
+    return () => {
+      if (s) s.unsub()
+    }
   })
 </script>
 
 <section>
+  {#if refs}
+    <div class="block">
+      {#each Array.from(refs.values()) as ref}
+        <NoteCard note={ref} />
+      {/each}
+    </div>
+  {/if}
   {#if note}
     <article class="card p-5 my-5">
       <div class="card-header is-shadowless">
@@ -94,9 +113,9 @@
       </div>
     </article>
   {/if}
-  {#if comments.length}
+  {#if comments}
     <div class="block">
-      {#each comments as comment}
+      {#each Array.from(comments.values()) as comment}
         <NoteCard note={comment} />
       {/each}
     </div>
