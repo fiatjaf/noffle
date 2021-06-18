@@ -3,8 +3,9 @@
   import {push} from 'svelte-spa-router'
 
   import {publish} from '../lib/relay'
-  import {getMetadata} from '../lib/metadata'
-  import {humanDate, abbr, emptyMetadata} from '../lib/helpers'
+  import {getMetadataStore} from '../lib/metadata'
+  import {humanDate, abbr} from '../lib/helpers'
+  import ProfileName from './ProfileName.svelte'
 
   export let note
 
@@ -14,7 +15,7 @@
   let replying = false
   let replyMsg = ''
 
-  $: author = getMetadata(note.pubkey) || emptyMetadata()
+  $: author = getMetadataStore(note.pubkey)
 
   const sendReply = id => {
     try {
@@ -39,23 +40,23 @@
           alt="~"
           class="is-48x48 image"
           on:click={() => push(`#/u/${note.pubkey}`)}
-          src={author.picture ||
+          src={$author.picture ||
             'https://bulma.io/images/placeholders/128x128.png'}
         />
       </figure>
       <div class="media-content">
         <div class="content">
           <p>
-            {#if author.name}
-              {author.name}
-            {/if}
+            <ProfileName meta={$author} />
             <strong
               class="is-clickable abbr"
               on:click={() => push(`#/u/${note.pubkey}`)}
             >
               {note.pubkey}
             </strong>
-            <small>{humanDate(note.created_at)}</small>
+            <small class="is-clickable" on:click={() => push(`#/n/${note.id}`)}>
+              {humanDate(note.created_at)}
+            </small>
             <br />
             {#if inReplyTo}
               <a href={`#/n/${inReplyTo}`}>
@@ -68,7 +69,7 @@
     </div>
   </header>
   <div class="card-content">
-    <div class="content" on:click={() => push(`#/n/${note.id}`)}>
+    <div class="content">
       {note.content}
     </div>
   </div>

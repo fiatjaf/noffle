@@ -5,6 +5,7 @@ import {keyFromDomain} from 'nostr-tools/nip05'
 import {emptyMetadata} from '../lib/helpers'
 
 const events = {}
+const stores = {}
 const setters = {}
 const domainVerificationCache = {}
 
@@ -43,7 +44,10 @@ export function getMetadata(pubkey) {
 }
 
 export function getMetadataStore(pubkey) {
-  return readable(emptyMetadata(), set => {
+  var store = stores[pubkey]
+  if (store) return store
+
+  store = readable(emptyMetadata(), set => {
     setters[pubkey] = setters[pubkey] || []
     let index = setters[pubkey].length
     setters[pubkey].push(set)
@@ -52,6 +56,8 @@ export function getMetadataStore(pubkey) {
       if (setters[pubkey].length === 0) delete setters[pubkey]
     }
   })
+  stores[pubkey] = store
+  return store
 }
 
 export function getRawMetadataEvent(pubkey) {

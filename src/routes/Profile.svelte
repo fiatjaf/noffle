@@ -8,6 +8,7 @@
   import following from '../stores/following'
   import browsing from '../stores/browsing'
   import NoteCard from '../components/NoteCard.svelte'
+  import ProfileName from '../components/ProfileName.svelte'
 
   export let params
 
@@ -62,12 +63,7 @@
       {#if $meta.picture}
         <img alt="~" class="is-64x64 image" src={$meta.picture} />
       {/if}
-      {#if $meta.domain && $meta.domainVerified}
-        <a href={`https://${$meta.domain}`}>{$meta.domain}</a>
-        {#if $meta.name} ({$meta.name}){/if}
-      {:else}
-        {$meta.name || 'Anon'}
-      {/if}
+      <ProfileName meta={$meta} />
     </p>
     <p>{$meta.about || ''}</p>
   </header>
