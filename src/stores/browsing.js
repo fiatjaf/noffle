@@ -47,9 +47,7 @@ const sub = pool.sub({
           current.metadata = event
           base.set(current)
         }
-
         cacheMetadata(event)
-
         break
       case KIND_CONTACTLIST:
         if (event.created_at > current.contactList.created_at) {

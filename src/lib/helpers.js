@@ -9,13 +9,16 @@ export const abbr = pubkey => {
 }
 
 export const sanitizeString = str => {
-  return str.replace(/[^\w. ]/gi, function (c) {
-    return '&#' + c.charCodeAt(0) + ';'
-  })
+  return str
+    .replace(/[^\w. ]/gi, function (c) {
+      return '&#' + c.charCodeAt(0) + ';'
+    })
+    .trim()
 }
 
 export const emptyMetadata = () => ({
   name: null,
   about: null,
-  picture: null
+  picture: null,
+  domain: null
 })

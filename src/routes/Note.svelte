@@ -29,7 +29,7 @@
 
           if (!hasReceivedNote) {
             hasReceivedNote = true
-            sub.sub({
+            s.sub({
               filter: basicFilter.concat(
                 note.tags.filter(([t]) => t === 'e').map(([_, v]) => v)
               )

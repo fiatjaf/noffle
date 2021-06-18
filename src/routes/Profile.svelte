@@ -35,7 +35,8 @@
     updateMetadata({
       picture: edit.picture && window.encodeURI(edit.picture.trim()),
       about: edit.about && sanitizeString(edit.about),
-      name: edit.name && sanitizeString(edit.name)
+      name: edit.name && sanitizeString(edit.name),
+      domain: edit.domain && sanitizeString(edit.domain)
     })
   }
 
@@ -61,7 +62,12 @@
       {#if $meta.picture}
         <img alt="~" class="is-64x64 image" src={$meta.picture} />
       {/if}
-      {$meta.name || 'Anon'}
+      {#if $meta.domain && $meta.domainVerified}
+        <a href={`https://${$meta.domain}`}>{$meta.domain}</a>
+        {#if $meta.name} ({$meta.name}){/if}
+      {:else}
+        {$meta.name || 'Anon'}
+      {/if}
     </p>
     <p>{$meta.about || ''}</p>
   </header>
@@ -75,7 +81,7 @@
               <input
                 class="input"
                 type="text"
-                placeholder="Picture URL"
+                placeholder="https://picture.example.com/me.png"
                 bind:value={edit.picture}
               />
             </label>
@@ -88,8 +94,21 @@
               <input
                 class="input"
                 type="text"
-                placeholder="Nickname"
+                placeholder="mynickname"
                 bind:value={edit.name}
+              />
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <label>
+              Domain
+              <input
+                class="input"
+                type="text"
+                placeholder="myname.com"
+                bind:value={edit.domain}
               />
             </label>
           </div>
@@ -100,7 +119,7 @@
               Bio
               <textarea
                 class="textarea"
-                placeholder="Something about you..."
+                placeholder="I am x and I like y."
                 bind:value={edit.about}
               />
             </label>
