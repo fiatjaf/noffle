@@ -13,19 +13,24 @@
     search = search.trim()
     let key
 
-    if (search.indexOf('.') !== -1) {
-      // it's a domain?
-      key = await keyFromDomain(search)
-    } else if (search.length === 64) {
+    if (search.length === 64) {
       key = search
-    } else {
-      let found = searchInCachedMetadata(search)
-      if (found) key = found
-      else return
     }
 
-    push(`#/u/${key.trim()}`)
-    search = ''
+    if (!key && search.indexOf('.') !== -1) {
+      // it's a domain?
+      key = await keyFromDomain(search)
+    }
+
+    if (!key) {
+      let found = searchInCachedMetadata(search)
+      if (found) key = found
+    }
+
+    if (key) {
+      push(`#/u/${key}`)
+      search = ''
+    }
   }
 </script>
 
