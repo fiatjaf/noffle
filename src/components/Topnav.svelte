@@ -1,19 +1,30 @@
 <script>
   import {push} from 'svelte-spa-router'
+  import {keyFromDomain} from 'nostr-tools/nip05'
+
+  import {searchInCachedMetadata} from '../lib/metadata'
 
   let search = ''
-
   const keyPress = e => {
     if (e.charCode === 13) searchUser()
   }
 
-  const searchUser = () => {
+  async function searchUser() {
     search = search.trim()
-    if (search.length !== 64) {
-      console.log('Not valid user pubkey!')
-      return
+    let key
+
+    if (search.indexOf('.') !== -1) {
+      // it's a domain?
+      key = await keyFromDomain(search)
+    } else if (search.length === 64) {
+      key = search
+    } else {
+      let found = searchInCachedMetadata(search)
+      if (found) key = found
+      else return
     }
-    push(`#/u/${search.trim()}`)
+
+    push(`#/u/${key.trim()}`)
     search = ''
   }
 </script>

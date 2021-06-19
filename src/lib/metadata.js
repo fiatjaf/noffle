@@ -60,6 +60,24 @@ export function getMetadataStore(pubkey) {
   return store
 }
 
+export function searchInCachedMetadata(search) {
+  for (let pubkey in events) {
+    let meta = getMetadata(pubkey)
+    if (meta.name.toLowerCase().indexOf(search.toLowerCase()) !== -1) {
+      return pubkey
+    }
+  }
+
+  for (let pubkey in events) {
+    let meta = getMetadata(pubkey)
+    if (meta.about.toLowerCase().indexOf(search.toLowerCase()) !== -1) {
+      return pubkey
+    }
+  }
+
+  return null
+}
+
 export function getRawMetadataEvent(pubkey) {
   return events[pubkey]
 }

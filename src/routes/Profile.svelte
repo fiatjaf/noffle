@@ -12,24 +12,25 @@
 
   export let params
 
-  let meta = getMetadataStore(params.profile)
-  let edit = emptyMetadata()
-  let unsub = meta.subscribe($meta => {
-    edit = {...$meta}
-    if (edit.name && edit.name.length > 0) {
-      setTimeout(() => {
-        unsub()
-      }, 1)
-    }
-  })
+  let meta, edit
+
+  $: {
+    meta = getMetadataStore(params.profile)
+    edit = emptyMetadata()
+    let unsub = meta.subscribe($meta => {
+      edit = {...$meta}
+      if (edit.name && edit.name.length > 0) {
+        setTimeout(() => {
+          unsub()
+        }, 1)
+      }
+    })
+
+    browsing.setPubkey(params.profile)
+  }
 
   $: self = params.profile === pubkey
-  $: isFollowing = $following.includes(params.profile)
-  $: followAction = isFollowing ? 'Unfollow' : 'Follow'
-
-  onMount(() => {
-    browsing.setPubkey(params.profile)
-  })
+  $: followAction = $following.includes(params.profile) ? 'Unfollow' : 'Follow'
 
   async function setMetadata(e) {
     e.preventDefault()
