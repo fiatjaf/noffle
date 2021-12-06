@@ -9,7 +9,7 @@
 <aside>
   <div class="block">
     <h2 class="title has-text-light">
-      <a href="#/">Nostrept</a>
+      <a href="#/">Noffle</a>
     </h2>
   </div>
   <div class="block">

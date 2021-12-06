@@ -22,7 +22,7 @@
     <div class="field my-6">
       <div class="control">
         <label>
-          Import a private key
+          Paste a private key
           <input class="input" type="text" placeholder="Private key" />
         </label>
       </div>

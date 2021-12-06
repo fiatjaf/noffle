@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "rollup -c -w",
-    "start": "sirv public"
+    "start": "sirv --port 3002 public"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-inject": "^4.0.2",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
+    "autoprefixer": "^10.4.0",
     "eslint": "^7.22.0",
     "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-svelte3": "^3.1.2",
@@ -23,14 +24,16 @@
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
     "sass": "^1.32.13",
-    "svelte": "3.38.2"
+    "svelte": "3.38.2",
+    "svelte-preprocess": "^4.9.8",
+    "tailwindcss": "^2.2.19"
   },
   "dependencies": {
     "bulma": "^0.9.2",
     "dexie": "^3.0.3",
     "insort": "^0.4.0",
     "nostr-tools": "0.5.0",
-    "postcss": "^8.2.6",
+    "postcss": "^8.4.4",
     "pretty-date": "^0.2.0",
     "sirv-cli": "^1.0.0",
     "svelte-spa-router": "^3.1.0",

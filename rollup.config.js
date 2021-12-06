@@ -8,6 +8,7 @@ import inject from '@rollup/plugin-inject'
 import json from '@rollup/plugin-json'
 import postcss from 'rollup-plugin-postcss'
 import nodePolyfills from 'rollup-plugin-node-polyfills'
+import sveltePreprocess from 'svelte-preprocess'
 
 const production = !process.env.ROLLUP_WATCH
 
@@ -49,7 +50,13 @@ export default {
       compilerOptions: {
         // enable run-time checks when not in production
         dev: !production
-      }
+      },
+      preprocess: sveltePreprocess({
+        sourceMap: !production,
+        postcss: {
+          plugins: [require('tailwindcss'), require('autoprefixer')]
+        }
+      })
     }),
     postcss({
       extract: 'global.css',

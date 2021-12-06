@@ -1,6 +1,5 @@
 <script>
   import {onDestroy} from 'svelte'
-  import {SortedMap} from 'insort'
   import {pool} from '../lib/relay'
   import NoteCard from '../components/NoteCard.svelte'
 
@@ -75,9 +74,3 @@
     </div>
   {/if}
 </section>
-
-<style>
-  .card-footer {
-    border: none;
-  }
-</style>
